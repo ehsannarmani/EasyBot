@@ -11,17 +11,21 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 
 fun Application.configureBot(
-    onUpdate:(Update)->Unit
+    onUpdate:(Update)->Unit,
+    onErrorThrown:(Throwable)->Unit
 ) {
     routing {
         post("/bot"){
-            println("post")
+
             val input = call.receiveText()
             print(input)
-            val update:Update = Json{
-                ignoreUnknownKeys = true
-            }.decodeFromString(input)
-            onUpdate(update)
+            runCatching {
+                Json{
+                    ignoreUnknownKeys = true
+                }.decodeFromString<Update>(input)
+            }
+                .onSuccess(onUpdate)
+                .onFailure(onErrorThrown)
         }
     }
 }

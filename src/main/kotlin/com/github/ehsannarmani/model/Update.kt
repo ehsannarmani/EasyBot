@@ -8,5 +8,7 @@ data class Update(
     @SerialName("update_id")
     val updateId:Long,
     @SerialName("message")
-    val message: Message,
+    val message: Message? = null,
+    @SerialName("my_chat_member")
+    val myChatMember: MyChatMember? = null,
 )

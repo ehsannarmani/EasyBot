@@ -11,7 +11,8 @@ import org.koin.java.KoinJavaComponent
 
 class Bot(
     private val token:String,
-    private val onUpdate:(Update)->Unit
+    private val onUpdate:(Update)->Unit = {},
+    private val onErrorThrown:(Throwable)->Unit = {},
 ):KoinComponent {
 
     fun launch(
@@ -24,7 +25,7 @@ class Bot(
         setWebhook(repo,token,webhookUrl)
 
         embeddedServer(Netty,host= host,port= post) {
-            configureBot (onUpdate = onUpdate)
+            configureBot (onUpdate = onUpdate,onErrorThrown = onErrorThrown)
         }.start(wait = true)
     }
 }
