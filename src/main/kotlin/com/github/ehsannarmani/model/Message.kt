@@ -40,5 +40,34 @@ data class Message(
     @SerialName("has_protected_content")
     val hasProtectedContent:Boolean = false,
     @SerialName("entities")
-    val entities:List<Entity>? = null
-)
+    val entities:List<Entity>? = null,
+    var messageType: MessageType = MessageType.Text
+){
+    init {
+        if (text != null){
+            messageType = MessageType.Text
+        }
+        if (audio != null){
+            messageType = MessageType.Audio
+        }
+        if (sticker != null){
+            messageType = MessageType.Sticker
+        }
+        if (document != null){
+            messageType = MessageType.Document
+        }
+        if (animation != null){
+            messageType = MessageType.Gif
+        }
+        if (voice != null){
+            messageType = MessageType.Voice
+        }
+        if (photo != null){
+            messageType = MessageType.Photo
+        }
+    }
+}
+
+enum class MessageType{
+    Text,Photo,Audio,Voice,Document,Gif,Sticker
+}

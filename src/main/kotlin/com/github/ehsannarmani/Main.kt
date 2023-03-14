@@ -6,7 +6,7 @@ fun main() {
     val bot = Bot(
         token = Constants.TOKEN,
         onUpdate = {
-
+            print("\n"+it.message?.messageType)
         },
         onErrorThrown = {
             println("\n"+it.message)
