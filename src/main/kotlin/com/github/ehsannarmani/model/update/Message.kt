@@ -1,4 +1,4 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.update
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -14,9 +14,9 @@ data class Message(
     @SerialName("date")
     val date:Long,
     @SerialName("reply_to_message")
-    val replyToMessage:Message? = null,
+    val replyToMessage: Message? = null,
     @SerialName("forward_from")
-    val forwardFrom:From? = null,
+    val forwardFrom: From? = null,
     @SerialName("forward_date")
     val forwardDate:Long? = null,
     @SerialName("text")
@@ -24,15 +24,15 @@ data class Message(
     @SerialName("photo")
     val photo:List<Photo>? = null,
     @SerialName("sticker")
-    val sticker:Sticker? = null,
+    val sticker: Sticker? = null,
     @SerialName("animation")
-    val animation:Animation? = null,
+    val animation: Animation? = null,
     @SerialName("document")
-    val document:Document? = null,
+    val document: Document? = null,
     @SerialName("audio")
-    val audio:Audio? = null,
+    val audio: Audio? = null,
     @SerialName("voice")
-    val voice:Voice? = null,
+    val voice: Voice? = null,
     @SerialName("caption")
     val caption:String? = null,
     @SerialName("new_chat_title")

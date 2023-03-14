@@ -1,4 +1,4 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.update
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,7 +13,7 @@ data class MyChatMember(
     @SerialName("date")
     val date:Long,
     @SerialName("old_chat_member")
-    val oldChatMember:ChatMember,
+    val oldChatMember: ChatMember,
     @SerialName("new_chat_member")
-    val newChatMember:ChatMember,
+    val newChatMember: ChatMember,
 )

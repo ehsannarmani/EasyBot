@@ -1,4 +1,4 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.update
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

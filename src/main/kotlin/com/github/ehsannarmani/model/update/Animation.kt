@@ -1,23 +1,25 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.update
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Audio(
-    @SerialName("duration")
-    val duration:Long,
+data class Animation(
     @SerialName("file_name")
     val fileName:String,
     @SerialName("mime_type")
     val mimeType:String,
-    @SerialName("title")
-    val title:String,
+    @SerialName("duration")
+    val duration:Long,
+    @SerialName("width")
+    val width:Int,
+    @SerialName("height")
+    val height:Int,
     @SerialName("thumbnail")
-    val thumbnail:Thumbnail,
+    val thumbnail: Thumbnail,
     @SerialName("thumb")
-    val thumb:Thumbnail,
+    val thumb: Thumbnail,
     @SerialName("file_id")
     val fileId:String,
     @SerialName("file_unique_id")

@@ -1,10 +1,11 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.update
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+
 @Serializable
-data class Thumbnail(
+data class Photo(
     @SerialName("file_id")
     val fileId:String,
     @SerialName("file_unique_id")

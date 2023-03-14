@@ -1,4 +1,4 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.update
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ChatMember(
     @SerialName("user")
-    val user:From,
+    val user: From,
     @SerialName("status")
     val status:String,
 )
