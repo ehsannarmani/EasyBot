@@ -33,6 +33,10 @@ data class Message(
     val audio: Audio? = null,
     @SerialName("voice")
     val voice: Voice? = null,
+    @SerialName("video")
+    val video: Video? = null,
+    @SerialName("video_note")
+    val videoNote: VideoNote? = null,
     @SerialName("poll")
     val poll: Poll? = null,
     @SerialName("caption")
@@ -47,6 +51,8 @@ data class Message(
     val replyMarkup:ReplyMarkup? = null,
     @SerialName("entities")
     val entities:List<Entity>? = null,
+    @SerialName("has_media_spoiler")
+    val hasMediaSpoiler:Boolean? = null,
     var messageType: MessageType = MessageType.Text
 ){
     init {
