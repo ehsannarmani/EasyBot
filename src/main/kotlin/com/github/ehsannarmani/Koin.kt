@@ -20,9 +20,9 @@ fun setupKoin(){
             single {
                 HttpClient(CIO){
                     expectSuccess = false
-                    install(Logging){
-                        level = LogLevel.BODY
-                    }
+//                    install(Logging){
+//                        level = LogLevel.BODY
+//                    }
                     install(ContentNegotiation){
                         json(Json {
                             ignoreUnknownKeys = true

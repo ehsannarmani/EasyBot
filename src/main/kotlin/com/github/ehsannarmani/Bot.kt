@@ -1,6 +1,7 @@
 package com.github.ehsannarmani
 
 import com.github.ehsannarmani.model.Result
+import com.github.ehsannarmani.model.message.ForwardMessage
 import com.github.ehsannarmani.model.message.TextMessage
 import com.github.ehsannarmani.model.result.Me
 import com.github.ehsannarmani.model.update.Message
@@ -48,6 +49,9 @@ class Bot(
     suspend fun sendMessage(message: TextMessage): Result<Message>? {
         return call("sendMessage", message)
     }
+    suspend fun forwardMessage(message:ForwardMessage):Result<Message>?{
+        return call("forwardMessage",message)
+    }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(
@@ -55,6 +59,7 @@ class Bot(
             method,
             body
         )
+        print("\n\n$method: $res\n\n")
         var returnResult:T? = null
         runCatching {
             returnResult = Json {

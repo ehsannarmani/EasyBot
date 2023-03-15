@@ -23,8 +23,14 @@ fun main() {
                     print("\n\n\n${bot.getMe()}",)
                     bot.sendMessage(TextMessage(
                         text = "Im ${bot.getMe()?.result?.firstName}",
-                        chatId = update.message.chat.id,
+                        chatId = update.message.chat.id.toString(),
                         parseMode = "html"
+                    ))
+                }else if (update.message?.text == "/forward") {
+                    bot.forwardMessage(ForwardMessage(
+                        chatId = update.message.chat.id.toString(),
+                        fromChatId = "-1001863143671",
+                        messageId = 873,
                     ))
                 }
             }
