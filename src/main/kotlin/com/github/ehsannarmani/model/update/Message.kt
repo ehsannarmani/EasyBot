@@ -33,6 +33,8 @@ data class Message(
     val audio: Audio? = null,
     @SerialName("voice")
     val voice: Voice? = null,
+    @SerialName("poll")
+    val poll: Poll? = null,
     @SerialName("caption")
     val caption:String? = null,
     @SerialName("new_chat_title")
@@ -67,9 +69,12 @@ data class Message(
         if (photo != null){
             messageType = MessageType.Photo
         }
+        if (poll != null){
+            messageType = MessageType.Poll
+        }
     }
 }
 
 enum class MessageType{
-    Text,Photo,Audio,Voice,Document,Gif,Sticker
+    Text,Photo,Audio,Voice,Document,Gif,Sticker,Poll
 }

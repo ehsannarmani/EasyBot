@@ -18,14 +18,6 @@ fun main() {
     val bot = Bot(
         token = Constants.TOKEN,
         onUpdate = { update, bot ->
-
-//            [
-//                'inline_keyboard'=>[
-//                    [
-//                        ['text'=>'x','callback_data'='x']
-//                    ]
-//                ]
-//            ]
             scope.launch {
                 if (update.message?.text == "/test") {
                     print("\n\n\n${bot.getMe()}",)
