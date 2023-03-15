@@ -9,6 +9,8 @@ data class Update(
     val updateId:Long,
     @SerialName("message")
     val message: Message? = null,
+    @SerialName("callback_query")
+    val callbackQuery: CallbackQuery? = null,
     @SerialName("my_chat_member")
     val myChatMember: MyChatMember? = null,
 )

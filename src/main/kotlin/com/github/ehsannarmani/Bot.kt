@@ -1,9 +1,9 @@
 package com.github.ehsannarmani
 
 import com.github.ehsannarmani.model.Result
-import com.github.ehsannarmani.model.message.ForwardMessage
-import com.github.ehsannarmani.model.message.TextMessage
+import com.github.ehsannarmani.model.message.*
 import com.github.ehsannarmani.model.result.Me
+import com.github.ehsannarmani.model.result.MessageId
 import com.github.ehsannarmani.model.update.Message
 import com.github.ehsannarmani.model.update.Update
 import com.github.ehsannarmani.plugins.configureBot
@@ -51,6 +51,17 @@ class Bot(
     }
     suspend fun forwardMessage(message:ForwardMessage):Result<Message>?{
         return call("forwardMessage",message)
+    }
+
+    suspend fun copyMessage(message:CopyMessage):Result<MessageId>?{
+        return call("copyMessage",message)
+    }
+    suspend fun sendPhoto(message:PhotoMessage):Result<Message>?{
+        return call("sendPhoto",message)
+    }
+
+    suspend fun sendAudio(message:AudioMessage):Result<Message>?{
+        return call("sendAudio",message)
     }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{

@@ -20,18 +20,29 @@ fun main() {
         onUpdate = { update, bot ->
             scope.launch {
                 if (update.message?.text == "/test") {
-                    print("\n\n\n${bot.getMe()}",)
-                    bot.sendMessage(TextMessage(
-                        text = "Im ${bot.getMe()?.result?.firstName}",
-                        chatId = update.message.chat.id.toString(),
-                        parseMode = "html"
-                    ))
-                }else if (update.message?.text == "/forward") {
-                    bot.forwardMessage(ForwardMessage(
-                        chatId = update.message.chat.id.toString(),
-                        fromChatId = "-1001863143671",
-                        messageId = 873,
-                    ))
+                    print("\n\n\n${bot.getMe()}")
+                    bot.sendMessage(
+                        TextMessage(
+                            text = "Im ${bot.getMe()?.result?.firstName}",
+                            chatId = update.message.chat.id.toString(),
+                            parseMode = "html"
+                        )
+                    )
+                } else if (update.message?.text == "/audio") {
+                    bot.sendAudio(
+                        AudioMessage(
+                            chatId = update.message.chat.id.toString(),
+                            audio = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                            caption = "hello",
+                            keyboard = InlineKeyboard(
+                                keyboard = listOf(
+                                    listOf(
+                                        InlineKeyboardItem(text = "hello", callbackData = "test")
+                                    )
+                                )
+                            )
+                        )
+                    )
                 }
             }
 
