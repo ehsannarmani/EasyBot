@@ -66,6 +66,18 @@ class Bot(
     suspend fun sendDocument(message:DocumentMessage):Result<Message>?{
         return call("sendDocument",message)
     }
+    suspend fun sendVideo(message:VideoMessage):Result<Message>?{
+        return call("sendVideo",message)
+    }
+    suspend fun sendAnimation(message:AnimationMessage):Result<Message>?{
+        return call("sendAnimation",message)
+    }
+    suspend fun sendVoice(message:VoiceMessage):Result<Message>?{
+        return call("sendVoice",message)
+    }
+    suspend fun sendVideoNote(message:VideoNoteMessage):Result<Message>?{
+        return call("sendVideoNote",message)
+    }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(

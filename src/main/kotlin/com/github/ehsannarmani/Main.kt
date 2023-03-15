@@ -28,12 +28,11 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/doc") {
-                    bot.sendDocument(
-                        DocumentMessage(
+                } else if (update.message?.text == "/video") {
+                    bot.sendVideoNote(
+                        VideoNoteMessage(
                             chatId = update.message.chat.id.toString(),
-                            document = "http://chap.sch.ir/sites/default/files/lbooks/97-98/30/001-016%20C111214.pdf",
-                            caption = "hello",
+                            videoNote = "DQACAgQAAx0Cbw1Q9wACA-JkEcBBbo9G6RQM1hxTed1KeD8p4gAC4w8AAuIAAZFQZnR7Adi-cUAvBA",
                             keyboard = InlineKeyboard(
                                 keyboard = listOf(
                                     listOf(
