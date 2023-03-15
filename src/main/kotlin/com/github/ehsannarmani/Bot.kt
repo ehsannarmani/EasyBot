@@ -63,6 +63,9 @@ class Bot(
     suspend fun sendAudio(message:AudioMessage):Result<Message>?{
         return call("sendAudio",message)
     }
+    suspend fun sendDocument(message:DocumentMessage):Result<Message>?{
+        return call("sendDocument",message)
+    }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(

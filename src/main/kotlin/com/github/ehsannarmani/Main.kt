@@ -28,11 +28,11 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/audio") {
-                    bot.sendAudio(
-                        AudioMessage(
+                } else if (update.message?.text == "/doc") {
+                    bot.sendDocument(
+                        DocumentMessage(
                             chatId = update.message.chat.id.toString(),
-                            audio = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                            document = "http://chap.sch.ir/sites/default/files/lbooks/97-98/30/001-016%20C111214.pdf",
                             caption = "hello",
                             keyboard = InlineKeyboard(
                                 keyboard = listOf(
@@ -62,7 +62,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://26f0-94-131-98-78.eu.ngrok.io/bot"
+        webhookUrl = "https://d78a-94-131-98-78.eu.ngrok.io/bot"
     )
 
 }
