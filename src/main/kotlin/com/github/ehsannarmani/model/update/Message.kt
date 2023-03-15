@@ -43,6 +43,8 @@ data class Message(
     val hasProtectedContent:Boolean = false,
     @SerialName("contact")
     val contact: Contact? = null,
+    @SerialName("reply_markup")
+    val replyMarkup:ReplyMarkup? = null,
     @SerialName("entities")
     val entities:List<Entity>? = null,
     var messageType: MessageType = MessageType.Text

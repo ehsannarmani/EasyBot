@@ -37,12 +37,21 @@ fun main() {
                             keyboard = InlineKeyboard(
                                 keyboard = listOf(
                                     listOf(
+                                        InlineKeyboardItem(text = "hello", callbackData = "test"),
+                                        InlineKeyboardItem(text = "hello", callbackData = "test"),
+                                    ),
+                                    listOf(
                                         InlineKeyboardItem(text = "hello", callbackData = "test")
-                                    )
+                                    ),
                                 )
                             )
                         )
                     )
+                }
+                if (update.callbackQuery != null){
+                    if(update.callbackQuery.message.replyMarkup != null){
+                        bot.sendMessage(TextMessage(chatId = update.callbackQuery.message.chat.id.toString(), text = "you are clicked"))
+                    }
                 }
             }
 
