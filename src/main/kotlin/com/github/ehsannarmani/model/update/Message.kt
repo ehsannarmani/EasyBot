@@ -39,6 +39,8 @@ data class Message(
     val newChatTitle:String? = null,
     @SerialName("has_protected_content")
     val hasProtectedContent:Boolean = false,
+    @SerialName("contact")
+    val contact: Contact? = null,
     @SerialName("entities")
     val entities:List<Entity>? = null,
     var messageType: MessageType = MessageType.Text

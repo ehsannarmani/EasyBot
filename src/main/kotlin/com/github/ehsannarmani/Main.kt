@@ -1,6 +1,13 @@
 package com.github.ehsannarmani
 
-import com.github.ehsannarmani.model.message.TextMessage
+import com.github.ehsannarmani.model.message.*
+import com.github.ehsannarmani.model.message.keyboard.ForceReply
+import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
+import com.github.ehsannarmani.model.message.keyboard.RemoveKeyboard
+import com.github.ehsannarmani.model.message.keyboard.ReplyKeyboard
+import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
+import com.github.ehsannarmani.model.message.keyboard.inline.LoginUrl
+import com.github.ehsannarmani.model.message.keyboard.reply.ReplyKeyboardItem
 import com.github.ehsannarmani.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,11 +19,20 @@ fun main() {
         token = Constants.TOKEN,
         onUpdate = { update, bot ->
 
+//            [
+//                'inline_keyboard'=>[
+//                    [
+//                        ['text'=>'x','callback_data'='x']
+//                    ]
+//                ]
+//            ]
             scope.launch {
-                if(update.message?.text == "/test"){
+                if (update.message?.text == "/test") {
+                    print("\n\n\n${bot.getMe()}",)
                     bot.sendMessage(TextMessage(
-                        text = "this is test",
-                        chatId = update.message.chat.id
+                        text = "Im ${bot.getMe()?.result?.firstName}",
+                        chatId = update.message.chat.id,
+                        parseMode = "html"
                     ))
                 }
             }
@@ -28,7 +44,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://b018-94-131-98-78.eu.ngrok.io/bot"
+        webhookUrl = "https://26f0-94-131-98-78.eu.ngrok.io/bot"
     )
 
 }

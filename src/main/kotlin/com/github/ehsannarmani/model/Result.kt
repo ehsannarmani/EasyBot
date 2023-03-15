@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Result(
+data class Result<T>(
     @SerialName("ok")
     val ok:Boolean,
     @SerialName("result")
-    val result:Message?=null,
+    val result:T?=null,
     @SerialName("error_code")
     val errorCode:Int? = null,
     @SerialName("description")

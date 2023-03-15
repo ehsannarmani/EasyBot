@@ -26,6 +26,8 @@ fun setupKoin(){
                     install(ContentNegotiation){
                         json(Json {
                             ignoreUnknownKeys = true
+                            encodeDefaults = true
+                            explicitNulls = false
                         })
                     }
                     defaultRequest {

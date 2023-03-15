@@ -20,7 +20,7 @@ class BotRepoImpl(val client: HttpClient):BotRepo {
         client.get("${Constants.BASE_URL}$token/setWebhook?url=$url&drop_pending_updates=true")
     }
 
-    override suspend fun callMethod(token: String, method: String, body:Any):String {
+    override suspend fun callMethod(token: String, method: String, body:Any?):String {
         val result: String = client.post( "${Constants.BASE_URL}$token/$method"){
             setBody(body)
         }.body()

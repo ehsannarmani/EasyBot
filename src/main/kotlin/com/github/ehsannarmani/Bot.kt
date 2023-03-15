@@ -2,6 +2,8 @@ package com.github.ehsannarmani
 
 import com.github.ehsannarmani.model.Result
 import com.github.ehsannarmani.model.message.TextMessage
+import com.github.ehsannarmani.model.result.Me
+import com.github.ehsannarmani.model.update.Message
 import com.github.ehsannarmani.model.update.Update
 import com.github.ehsannarmani.plugins.configureBot
 import com.github.ehsannarmani.repository.BotRepo
@@ -40,11 +42,14 @@ class Bot(
         }.start(wait = true)
     }
 
-    suspend fun sendMessage(message: TextMessage): Result? {
+    suspend fun getMe():Result<Me>?{
+        return call("getMe",null)
+    }
+    suspend fun sendMessage(message: TextMessage): Result<Message>? {
         return call("sendMessage", message)
     }
 
-    private suspend inline fun <reified T> call(method:String, body:Any):T?{
+    private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(
             token,
             method,
@@ -55,7 +60,16 @@ class Bot(
             returnResult = Json {
                 ignoreUnknownKeys = true
             }.decodeFromString(res)
+        }.onFailure {
+            println("\n\nerror: ${it.message}\n\n")
         }
         return returnResult
+    }
+    private suspend fun callWithoutSerialize(method: String, body: Any?): String {
+        return repo.callMethod(
+            token,
+            method,
+            body
+        )
     }
 }
