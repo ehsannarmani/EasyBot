@@ -81,6 +81,12 @@ class Bot(
     suspend fun sendMediaGroup(message:MediaGroupMessage):Result<List<Message>>?{
         return call("sendMediaGroup",message)
     }
+    suspend fun sendLocation(message:LocationMessage):Result<Message>?{
+        return call("sendLocation",message)
+    }
+    suspend fun sendVenue(message:VenueMessage):Result<Message>?{
+        return call("sendVenue",message)
+    }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(

@@ -28,14 +28,14 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/group") {
-                    bot.sendMediaGroup(
-                        MediaGroupMessage(
+                } else if (update.message?.text == "/location") {
+                    bot.sendVenue(
+                        VenueMessage(
                             chatId = update.message.chat.id.toString(),
-                            media = listOf(
-                                InputMediaPhoto(media = "https://cdn.britannica.com/45/5645-050-B9EC0205/head-treasure-flower-disk-flowers-inflorescence-ray.jpg"),
-                                InputMediaAudio(media = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_f8242dc80f.mp3?filename=edm-deep-house-ish-female-vocal-112184.mp3"),
-                            )
+                            latitude = 35.692546f,
+                            longitude = 51.414749f,
+                            address = "test address",
+                            title = "title"
                         )
                     )
                 }

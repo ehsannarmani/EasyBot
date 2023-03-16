@@ -49,6 +49,8 @@ data class Message(
     val contact: Contact? = null,
     @SerialName("location")
     val location: Location? = null,
+    @SerialName("venue")
+    val venue: Venue? = null,
     @SerialName("reply_markup")
     val replyMarkup:ReplyMarkup? = null,
     @SerialName("entities")
