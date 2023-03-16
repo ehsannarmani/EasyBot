@@ -21,7 +21,7 @@ data class Poll(
     @SerialName("type")
     val type:String,
     @SerialName("allow_multiple_answers")
-    val allowMultipleAnswers:Boolean,
+    val allowMultipleAnswers:Boolean? = null,
 )
 
 @Serializable

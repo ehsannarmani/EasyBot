@@ -13,4 +13,6 @@ data class Update(
     val callbackQuery: CallbackQuery? = null,
     @SerialName("my_chat_member")
     val myChatMember: MyChatMember? = null,
+    @SerialName("poll_answer")
+    val pollAnswer: PollAnswer? = null,
 )

@@ -28,12 +28,17 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/contact") {
-                    bot.sendContact(
-                        ContactMessage(
+                } else if (update.message?.text == "/poll") {
+                    bot.sendPoll(
+                        PollMessage(
                             chatId = update.message.chat.id.toString(),
-                            phoneNumber = "+9879872987",
-                            firstName = "یه کونی"
+                            question = "who is koni?",
+                            options = listOf("ali","farhad"),
+                            correctOptionId = 0,
+                            explanation = "maybe ali",
+                            explanationParseMode = "markdown",
+                            type = "quiz",
+                            isAnonymous = false
                         )
                     )
                 }
