@@ -53,6 +53,8 @@ data class Message(
     val replyMarkup:ReplyMarkup? = null,
     @SerialName("entities")
     val entities:List<Entity>? = null,
+    @SerialName("via_bot")
+    val viaBot:From? = null,
     @SerialName("has_media_spoiler")
     val hasMediaSpoiler:Boolean? = null,
     @SerialName("media_group_id")

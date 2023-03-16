@@ -13,7 +13,7 @@ data class Video(
     @SerialName("height")
     val height:Int,
     @SerialName("file_name")
-    val fileName:String,
+    val fileName:String? = null,
     @SerialName("mime_type")
     val mimeType:String,
     @SerialName("thumbnail")
