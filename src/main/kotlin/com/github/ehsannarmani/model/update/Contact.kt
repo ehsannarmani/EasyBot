@@ -12,5 +12,5 @@ data class Contact(
     @SerialName("last_name")
     val lastName:String? = null,
     @SerialName("user_id")
-    val userId:Long
+    val userId:Long? = null
 )

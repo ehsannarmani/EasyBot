@@ -88,6 +88,10 @@ class Bot(
         return call("sendVenue",message)
     }
 
+    suspend fun sendContact(message:ContactMessage):Result<Message>?{
+        return call("sendContact",message)
+    }
+
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(
             token,

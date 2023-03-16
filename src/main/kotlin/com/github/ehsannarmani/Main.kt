@@ -28,14 +28,12 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/location") {
-                    bot.sendVenue(
-                        VenueMessage(
+                } else if (update.message?.text == "/contact") {
+                    bot.sendContact(
+                        ContactMessage(
                             chatId = update.message.chat.id.toString(),
-                            latitude = 35.692546f,
-                            longitude = 51.414749f,
-                            address = "test address",
-                            title = "title"
+                            phoneNumber = "+9879872987",
+                            firstName = "یه کونی"
                         )
                     )
                 }
