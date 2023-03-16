@@ -10,29 +10,39 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.io.File
 
 @OptIn(InternalAPI::class)
-class BotRepoImpl(val client: HttpClient):BotRepo {
+class BotRepoImpl(val client: HttpClient) : BotRepo {
     override suspend fun setWebhook(
-        token:String,
-        url:String
+        token: String,
+        url: String
     ) {
         client.get("${Constants.BASE_URL}$token/setWebhook?url=$url&drop_pending_updates=true")
     }
 
-    override suspend fun callMethod(token: String, method: String, body:Any?):String {
-        val result: String = client.post( "${Constants.BASE_URL}$token/$method"){
+    override suspend fun callMethod(token: String, method: String, body: Any?): String {
+        val result: String = client.post("${Constants.BASE_URL}$token/$method") {
             setBody(body)
         }.body()
         return result
     }
 
     override suspend fun callMethodWithMap(token: String, method: String, params: List<Pair<String, Any>>): String {
-        val result: String = client.submitForm( "${Constants.BASE_URL}$token/$method", formParameters = Parameters.build {
-            params.forEach {
-                append(it.first,it.second.toString())
-            }
-        }){
+        val result: String = client.submitFormWithBinaryData(
+            url = "${Constants.BASE_URL}$token/$method",
+            formData = formData {
+                params.forEach {
+                    if(it.second is File){
+                        append(it.first,(it.second as File).readBytes(),Headers.build {
+                            append(HttpHeaders.ContentType, "image/png")
+                            append(HttpHeaders.ContentDisposition, "filename=\"photo-${System.currentTimeMillis()}.png\"")
+                        })
+                    }else{
+                        append(it.first, it.second.toString())
+                    }
+                }
+            }) {
             this.method = HttpMethod.Post
         }.body()
         return result

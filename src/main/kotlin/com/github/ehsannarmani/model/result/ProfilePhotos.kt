@@ -1,6 +1,6 @@
 package com.github.ehsannarmani.model.result
 
-import com.github.ehsannarmani.model.File
+import com.github.ehsannarmani.model.method.File
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

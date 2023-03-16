@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Animation(
     @SerialName("file_name")
-    val fileName:String,
+    val fileName:String? = null,
     @SerialName("mime_type")
     val mimeType:String,
     @SerialName("duration")

@@ -1,4 +1,4 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.method
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserProfilePhotos(
     @SerialName("user_id")
-    val userId:Int,
+    val userId:Long,
     @SerialName("offset")
     val offset:Int? = null,
     @SerialName("limit")

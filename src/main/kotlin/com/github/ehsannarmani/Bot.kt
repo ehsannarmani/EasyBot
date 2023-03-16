@@ -1,11 +1,10 @@
 package com.github.ehsannarmani
 
-import com.github.ehsannarmani.model.ChatAction
-import com.github.ehsannarmani.model.File
-import com.github.ehsannarmani.model.Result
-import com.github.ehsannarmani.model.UserProfilePhotos
+import com.github.ehsannarmani.model.*
 import com.github.ehsannarmani.model.message.*
+import com.github.ehsannarmani.model.method.*
 import com.github.ehsannarmani.model.result.*
+import com.github.ehsannarmani.model.update.ChatMember
 import com.github.ehsannarmani.model.update.Message
 import com.github.ehsannarmani.model.update.Update
 import com.github.ehsannarmani.plugins.configureBot
@@ -18,6 +17,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.io.File
 
 class Bot(
     private val token: String,
@@ -101,7 +101,7 @@ class Bot(
     suspend fun sendChatAction(action: ChatAction):Result<Boolean>?{
         return call("sendChatAction",action)
     }
-    suspend fun getUserProfilePhotos(user:UserProfilePhotos):Result<ProfilePhotos>?{
+    suspend fun getUserProfilePhotos(user: UserProfilePhotos):Result<ProfilePhotos>?{
         return call("getUserProfilePhotos",user)
     }
     suspend fun getFile(fileId:String):DownloadFile{
@@ -110,6 +110,135 @@ class Bot(
             result = file,
             fileLink = "https://api.telegram.org/file/bot$token/${file?.result?.filePath}"
         )
+    }
+    suspend fun banChatMember(member: BanChatMember):Result<Boolean>?{
+        return call("banChatMember",member)
+    }
+    suspend fun unbanChatMember(member: UnBanChatMember):Result<Boolean>?{
+        return call("unbanChatMember",member)
+    }
+    suspend fun restrictChatMember(member: RestrictChatMember):Result<Boolean>?{
+        return call("restrictChatMember",member)
+    }
+    suspend fun promoteChatMember(member: PromoteChatMember):Result<Boolean>?{
+        return call("promoteChatMember",member)
+    }
+    suspend fun setChatAdminCustomTitle(title: ChatAdminCustomTitle):Result<Boolean>?{
+        return call("setChatAdministratorCustomTitle",title)
+    }
+    suspend fun banChatSenderChat(senderChat: ChatSenderChat):Result<Boolean>?{
+        return call("banChatSenderChat",senderChat)
+    }
+    suspend fun unbanChatSenderChat(senderChat: ChatSenderChat):Result<Boolean>?{
+        return call("unbanChatSenderChat",senderChat)
+    }
+    suspend fun setChatPermissions(chat: ChangeChatPermissions):Result<Boolean>?{
+        return call("setChatPermissions", chat)
+    }
+    suspend fun exportChatInviteLink(chatId:String):Result<String>?{
+        return callWithMap("exportChatInviteLink", listOf("chat_id" to chatId))
+    }
+    suspend fun createChatInviteLink(link: ChatInviteLink):Result<InviteLink>?{
+        return call("createChatInviteLink", link)
+    }
+    suspend fun editChatInviteLink(link: ChatInviteLink):Result<InviteLink>?{
+        return call("editChatInviteLink", link)
+    }
+    suspend fun revokeChatInviteLink(chatId:String,inviteLink:String):Result<InviteLink>?{
+        return callWithMap("revokeChatInviteLink", listOf(
+            "chat_id" to chatId,
+            "invite_link" to inviteLink
+        ))
+    }
+    suspend fun approveChatJoinRequest(chatId:String,userId:Long):Result<Boolean>?{
+        return callWithMap("approveChatJoinRequest", listOf(
+            "chat_id" to chatId,
+            "user_id" to userId
+        ))
+    }
+    suspend fun declineChatJoinRequest(chatId:String,userId:Long):Result<Boolean>?{
+        return callWithMap("declineChatJoinRequest", listOf(
+            "chat_id" to chatId,
+            "user_id" to userId
+        ))
+    }
+    suspend fun setChatPhoto(chatId:String,photo:File):Result<Boolean>? {
+        return callWithMap("setChatPhoto", listOf(
+            "chat_id" to chatId,
+            "photo" to photo
+        ))
+    }
+    suspend fun deleteChatPhoto(chatId:String):Result<Boolean>? {
+        return callWithMap("deleteChatPhoto", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun setChatTitle(chatId:String,title:String):Result<Boolean>? {
+        return callWithMap("setChatTitle", listOf(
+            "chat_id" to chatId,
+            "title" to title
+        ))
+    }
+    suspend fun setChatDescription(chatId:String,description:String):Result<Boolean>? {
+        return callWithMap("setChatDescription", listOf(
+            "chat_id" to chatId,
+            "description" to description
+        ))
+    }
+    suspend fun pinChatMessage(chatId:String,messageId:Int,disableNotification:Boolean = false):Result<Boolean>? {
+        return callWithMap("pinChatMessage", listOf(
+            "chat_id" to chatId,
+            "message_id" to messageId,
+            "disable_notification" to disableNotification
+        ))
+    }
+    suspend fun unpinChatMessage(chatId:String,messageId:Int):Result<Boolean>? {
+        return callWithMap("unpinChatMessage", listOf(
+            "chat_id" to chatId,
+            "message_id" to messageId,
+        ))
+    }
+    suspend fun unpinAllChatMessages(chatId:String):Result<Boolean>? {
+        return callWithMap("unpinAllChatMessages", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun leaveChat(chatId:String):Result<Boolean>? {
+        return callWithMap("leaveChat", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun getChat(chatId:String):Result<Chat>? {
+        return callWithMap("getChat", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun getChatAdministrators(chatId:String):Result<List<ChatMember>>? {
+        return callWithMap("getChatAdministrators", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun getChatMemberCount(chatId:String):Result<Int>? {
+        return callWithMap("getChatMemberCount", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun getChatMember(chatId:String,userId:Long):Result<ChatMember>? {
+        return callWithMap("getChatMember", listOf(
+            "chat_id" to chatId,
+            "user_id" to userId
+        ))
+    }
+    suspend fun setChatStickerSet(chatId:String, stickerSetName:String):Result<Boolean>? {
+        return callWithMap("setChatStickerSet", listOf(
+            "chat_id" to chatId,
+            "sticker_set_name" to stickerSetName
+        ))
+    }
+    suspend fun deleteChatStickerSet(chatId:String):Result<Boolean>? {
+        return callWithMap("deleteChatStickerSet", listOf(
+            "chat_id" to chatId,
+        ))
     }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{

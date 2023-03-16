@@ -1,4 +1,4 @@
-package com.github.ehsannarmani.model
+package com.github.ehsannarmani.model.method
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -11,7 +11,7 @@ data class ChatAction(
     @SerialName("message_thread_id")
     val messageThreadId:Int? = null,
     @SerialName("action")
-    val action:Action
+    val action: Action
 )
 
 @Serializable

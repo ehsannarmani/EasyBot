@@ -1,20 +1,15 @@
 package com.github.ehsannarmani
 
-import com.github.ehsannarmani.model.Action
-import com.github.ehsannarmani.model.ChatAction
-import com.github.ehsannarmani.model.UserProfilePhotos
 import com.github.ehsannarmani.model.message.*
-import com.github.ehsannarmani.model.message.keyboard.ForceReply
-import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
-import com.github.ehsannarmani.model.message.keyboard.RemoveKeyboard
-import com.github.ehsannarmani.model.message.keyboard.ReplyKeyboard
-import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
-import com.github.ehsannarmani.model.message.keyboard.inline.LoginUrl
-import com.github.ehsannarmani.model.message.keyboard.reply.ReplyKeyboardItem
+import com.github.ehsannarmani.model.method.ChangeChatPermissions
+import com.github.ehsannarmani.model.method.ChatAdminCustomTitle
+import com.github.ehsannarmani.model.method.ChatInviteLink
+import com.github.ehsannarmani.model.method.ChatPermissions
 import com.github.ehsannarmani.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 fun main() {
     val scope = CoroutineScope(Dispatchers.IO)
@@ -31,17 +26,20 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/profile") {
-                    val res = bot.getUserProfilePhotos(UserProfilePhotos(
-                        userId = update.message.from.id.toInt()
-                    ))
-                    val file = bot.getFile(res?.result?.photos?.first()?.last()?.fileId ?: "")
-                    print("\n\n$res\n")
-                    bot.sendMessage(TextMessage(
-                        chatId = update.message.chat.id.toString(),
-                        text = "first profile link: ${file.fileLink}",
-                        parseMode = "html"
-                    ))
+                } else if (update.message?.text?.contains("/sticker") == true) {
+                    if(update.message.from.id.toInt() == 867396070){
+                        val res = bot.setChatStickerSet(
+                            chatId =update.message.chat.id.toString(),
+                            stickerSetName = "@Cod_EXX"
+                        )
+                        bot.sendMessage(
+                            TextMessage(
+                                text = "set sticker set: ${res?.result}",
+                                chatId = update.message.chat.id.toString(),
+                                parseMode = "markdown"
+                            )
+                        )
+                    }
                 }
                 if (update.callbackQuery != null){
                     if(update.callbackQuery.message.replyMarkup != null){
@@ -57,7 +55,8 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://c13f-94-131-98-78.eu.ngrok.io/bot"
+        webhookUrl = "https://4d2a-94-131-98-78.eu.ngrok.io/bot",
+        post = 3002
     )
 
 }

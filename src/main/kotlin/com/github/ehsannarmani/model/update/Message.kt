@@ -55,6 +55,8 @@ data class Message(
     val dice: Dice? = null,
     @SerialName("reply_markup")
     val replyMarkup:ReplyMarkup? = null,
+    @SerialName("pinned_message")
+    val pinnedMessage:Message? = null,
     @SerialName("entities")
     val entities:List<Entity>? = null,
     @SerialName("via_bot")
