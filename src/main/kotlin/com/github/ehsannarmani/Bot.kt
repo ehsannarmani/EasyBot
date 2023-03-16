@@ -1,9 +1,11 @@
 package com.github.ehsannarmani
 
+import com.github.ehsannarmani.model.ChatAction
+import com.github.ehsannarmani.model.File
 import com.github.ehsannarmani.model.Result
+import com.github.ehsannarmani.model.UserProfilePhotos
 import com.github.ehsannarmani.model.message.*
-import com.github.ehsannarmani.model.result.Me
-import com.github.ehsannarmani.model.result.MessageId
+import com.github.ehsannarmani.model.result.*
 import com.github.ehsannarmani.model.update.Message
 import com.github.ehsannarmani.model.update.Update
 import com.github.ehsannarmani.plugins.configureBot
@@ -93,12 +95,45 @@ class Bot(
     suspend fun sendPoll(message:PollMessage):Result<Message>?{
         return call("sendPoll",message)
     }
+    suspend fun sendDice(message:DiceMessage):Result<Message>?{
+        return call("sendDice",message)
+    }
+    suspend fun sendChatAction(action: ChatAction):Result<Boolean>?{
+        return call("sendChatAction",action)
+    }
+    suspend fun getUserProfilePhotos(user:UserProfilePhotos):Result<ProfilePhotos>?{
+        return call("getUserProfilePhotos",user)
+    }
+    suspend fun getFile(fileId:String):DownloadFile{
+        val file: Result<FilePath>? = callWithMap("getFile", listOf("file_id" to fileId))
+        return DownloadFile(
+            result = file,
+            fileLink = "https://api.telegram.org/file/bot$token/${file?.result?.filePath}"
+        )
+    }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(
             token,
             method,
             body
+        )
+        print("\n\n$method: $res\n\n")
+        var returnResult:T? = null
+        runCatching {
+            returnResult = Json {
+                ignoreUnknownKeys = true
+            }.decodeFromString(res)
+        }.onFailure {
+            println("\n\nerror: ${it.message}\n\n")
+        }
+        return returnResult
+    }
+    private suspend inline fun <reified T:Any> callWithMap(method:String, params:List<Pair<String,Any>>):T?{
+        val res = repo.callMethodWithMap(
+            token,
+            method,
+            params
         )
         print("\n\n$method: $res\n\n")
         var returnResult:T? = null

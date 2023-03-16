@@ -51,6 +51,8 @@ data class Message(
     val location: Location? = null,
     @SerialName("venue")
     val venue: Venue? = null,
+    @SerialName("dice")
+    val dice: Dice? = null,
     @SerialName("reply_markup")
     val replyMarkup:ReplyMarkup? = null,
     @SerialName("entities")

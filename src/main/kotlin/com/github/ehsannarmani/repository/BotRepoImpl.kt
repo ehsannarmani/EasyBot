@@ -27,5 +27,16 @@ class BotRepoImpl(val client: HttpClient):BotRepo {
         return result
     }
 
+    override suspend fun callMethodWithMap(token: String, method: String, params: List<Pair<String, Any>>): String {
+        val result: String = client.submitForm( "${Constants.BASE_URL}$token/$method", formParameters = Parameters.build {
+            params.forEach {
+                append(it.first,it.second.toString())
+            }
+        }){
+            this.method = HttpMethod.Post
+        }.body()
+        return result
+    }
+
 
 }

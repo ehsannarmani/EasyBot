@@ -1,5 +1,8 @@
 package com.github.ehsannarmani
 
+import com.github.ehsannarmani.model.Action
+import com.github.ehsannarmani.model.ChatAction
+import com.github.ehsannarmani.model.UserProfilePhotos
 import com.github.ehsannarmani.model.message.*
 import com.github.ehsannarmani.model.message.keyboard.ForceReply
 import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
@@ -28,19 +31,17 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/poll") {
-                    bot.sendPoll(
-                        PollMessage(
-                            chatId = update.message.chat.id.toString(),
-                            question = "who is koni?",
-                            options = listOf("ali","farhad"),
-                            correctOptionId = 0,
-                            explanation = "maybe ali",
-                            explanationParseMode = "markdown",
-                            type = "quiz",
-                            isAnonymous = false
-                        )
-                    )
+                } else if (update.message?.text == "/profile") {
+                    val res = bot.getUserProfilePhotos(UserProfilePhotos(
+                        userId = update.message.from.id.toInt()
+                    ))
+                    val file = bot.getFile(res?.result?.photos?.first()?.last()?.fileId ?: "")
+                    print("\n\n$res\n")
+                    bot.sendMessage(TextMessage(
+                        chatId = update.message.chat.id.toString(),
+                        text = "first profile link: ${file.fileLink}",
+                        parseMode = "html"
+                    ))
                 }
                 if (update.callbackQuery != null){
                     if(update.callbackQuery.message.replyMarkup != null){
@@ -56,7 +57,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://fb71-94-131-98-78.eu.ngrok.io/bot"
+        webhookUrl = "https://c13f-94-131-98-78.eu.ngrok.io/bot"
     )
 
 }

@@ -26,7 +26,7 @@ data class PollMessage(
     @SerialName("explanation")
     val explanation:String? = null,
     @SerialName("explanation_parse_mode")
-    val explanationParseMode:String? = null,
+    val explanationParseMode:String = "markdown",
     @SerialName("explanation_entities")
     val explanationEntities:List<MessageEntity>? = null,
     @SerialName("open_period")
