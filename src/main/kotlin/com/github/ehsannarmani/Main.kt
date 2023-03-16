@@ -28,21 +28,13 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text == "/video") {
-                    bot.sendVideoNote(
-                        VideoNoteMessage(
+                } else if (update.message?.text == "/group") {
+                    bot.sendMediaGroup(
+                        MediaGroupMessage(
                             chatId = update.message.chat.id.toString(),
-                            videoNote = "DQACAgQAAx0Cbw1Q9wACA-JkEcBBbo9G6RQM1hxTed1KeD8p4gAC4w8AAuIAAZFQZnR7Adi-cUAvBA",
-                            keyboard = InlineKeyboard(
-                                keyboard = listOf(
-                                    listOf(
-                                        InlineKeyboardItem(text = "hello", callbackData = "test"),
-                                        InlineKeyboardItem(text = "hello", callbackData = "test"),
-                                    ),
-                                    listOf(
-                                        InlineKeyboardItem(text = "hello", callbackData = "test")
-                                    ),
-                                )
+                            media = listOf(
+                                InputMediaPhoto(media = "https://cdn.britannica.com/45/5645-050-B9EC0205/head-treasure-flower-disk-flowers-inflorescence-ray.jpg"),
+                                InputMediaAudio(media = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_f8242dc80f.mp3?filename=edm-deep-house-ish-female-vocal-112184.mp3"),
                             )
                         )
                     )
@@ -61,7 +53,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://d78a-94-131-98-78.eu.ngrok.io/bot"
+        webhookUrl = "https://fb71-94-131-98-78.eu.ngrok.io/bot"
     )
 
 }

@@ -78,6 +78,9 @@ class Bot(
     suspend fun sendVideoNote(message:VideoNoteMessage):Result<Message>?{
         return call("sendVideoNote",message)
     }
+    suspend fun sendMediaGroup(message:MediaGroupMessage):Result<List<Message>>?{
+        return call("sendMediaGroup",message)
+    }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(

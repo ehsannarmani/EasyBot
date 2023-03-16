@@ -47,12 +47,16 @@ data class Message(
     val hasProtectedContent:Boolean = false,
     @SerialName("contact")
     val contact: Contact? = null,
+    @SerialName("location")
+    val location: Location? = null,
     @SerialName("reply_markup")
     val replyMarkup:ReplyMarkup? = null,
     @SerialName("entities")
     val entities:List<Entity>? = null,
     @SerialName("has_media_spoiler")
     val hasMediaSpoiler:Boolean? = null,
+    @SerialName("media_group_id")
+    val mediaGroupId:String? = null,
     var messageType: MessageType = MessageType.Text
 ){
     init {
