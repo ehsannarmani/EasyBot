@@ -43,24 +43,19 @@ fun main() {
                         )
 
                     }
-                } else if (update.message?.text?.contains("/invoice") == true) {
+                } else if (update.message?.text?.contains("/score") == true) {
                     if (update.message.from.id.toInt() == 867396070) {
-                        val res = createInvoiceLink(
-                            Invoice(
-                                title = "invoice test",
-                                description = "invoice desc",
-                                currency = "ILS",
-                                payload = "test",
-                                prices = listOf(
-                                    LabeledPrice("price1", 15000),
-                                    LabeledPrice("price2", 1000)
-                                ),
-                                providerToken = "1877036958:TEST:35362ef782e7628e7955e58afd2524a98bbc3734"
+                        val res = setGameScore(
+                            GameScore(
+                                update.message.replyToMessage?.from?.id ?: 0,
+                                chatId = update.message.replyToMessage?.chat?.id.toString(),
+                                score = 100,
+                                messageId = update.message.replyToMessage?.messageId ?: 0
                             )
                         )
                         sendMessage(
                             TextMessage(
-                                text = "invoice created: ${res?.result}",
+                                text = "set score: ${res?.result}",
                                 chatId = update.message.chat.id.toString(),
                                 parseMode = "html"
                             )

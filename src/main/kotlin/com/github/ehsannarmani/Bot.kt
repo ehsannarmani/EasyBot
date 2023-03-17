@@ -469,6 +469,12 @@ class Bot(
     suspend fun sendGame(game: Game):Result<Message>?{
         return call("sendGame", game)
     }
+    suspend fun setGameScore(score: GameScore):Result<Boolean>?{
+        return call("setGameScore", score)
+    }
+    suspend fun getGameHighScores(highScores: GameHighScores):Result<List<GameHighScore>>?{
+        return call("getGameHighScores",highScores)
+    }
 
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
