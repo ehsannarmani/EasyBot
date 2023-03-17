@@ -10,7 +10,9 @@ import com.github.ehsannarmani.model.method.command.Commands
 import com.github.ehsannarmani.model.result.*
 import com.github.ehsannarmani.model.update.ChatMember
 import com.github.ehsannarmani.model.update.Message
+import com.github.ehsannarmani.model.update.Poll
 import com.github.ehsannarmani.model.update.Update
+import com.github.ehsannarmani.model.updating_messages.*
 import com.github.ehsannarmani.plugins.configureBot
 import com.github.ehsannarmani.repository.BotRepo
 import com.github.ehsannarmani.utils.Constants
@@ -350,6 +352,34 @@ class Bot(
     suspend fun getMyDefaultAdministratorRights():Result<ChatAdministratorRights>?{
         return call("getMyDefaultAdministratorRights",null)
     }
+    suspend fun editMessageText(message:EditTextMessage):Result<Message>?{
+        return call("editMessageText",message)
+    }
+    suspend fun editMessageCaption(caption: MessageCaption):Result<Message>?{
+        return call("editMessageCaption",caption)
+    }
+    suspend fun editMessageMedia(media: MessageMedia):Result<Message>?{
+        return call("editMessageMedia",media)
+    }
+    suspend fun editMessageLiveLocation(liveLocation: MessageLiveLocation):Result<Message>?{
+        return call("editMessageLiveLocation",liveLocation)
+    }
+    suspend fun stopMessageLiveLocation(stopLiveLocation: StopMessageLiveLocation):Result<Message>?{
+        return call("stopMessageLiveLocation",stopLiveLocation)
+    }
+    suspend fun editMessageReplyMarkup(message:MessageReplyMarkup):Result<Message>?{
+        return call("editMessageReplyMarkup",message)
+    }
+    suspend fun stopPoll(poll:MessageReplyMarkup):Result<Poll>?{
+        return call("stopPoll",poll)
+    }
+    suspend fun deleteMessage(chatId: String,messageId: Int):Result<Boolean>?{
+        return callWithMap("deleteMessage", listOf(
+            "chat_id" to chatId,
+            "message_id" to messageId
+        ))
+    }
+
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
         val res = repo.callMethod(

@@ -1,8 +1,12 @@
 package com.github.ehsannarmani
 
 import com.github.ehsannarmani.model.message.*
+import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
+import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
 import com.github.ehsannarmani.model.method.*
 import com.github.ehsannarmani.model.method.command.Commands
+import com.github.ehsannarmani.model.updating_messages.EditTextMessage
+import com.github.ehsannarmani.model.updating_messages.MessageReplyMarkup
 import com.github.ehsannarmani.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,37 +27,51 @@ fun main() {
                             parseMode = "html"
                         )
                     )
-                } else if (update.message?.text?.contains("/set") == true) {
+                } else if (update.message?.text?.contains("/poll") == true) {
                     if (update.message.from.id.toInt() == 867396070) {
-                        val res = bot.setMyShortDescription(
-                            shortDescription = update.message.text.replace("/set ","")
+                        val res = bot.sendPoll(
+                            PollMessage(
+                            chatId = update.message.chat.id.toString(),
+                            question = "this is test",
+                            options = listOf("test1","test2")
                         )
-                        bot.sendMessage(
-                            TextMessage(
-                                text = "desc set: ${res?.result}" ,
-                                chatId = update.message.chat.id.toString(),
-                                parseMode = "html"
-                            )
                         )
+//                        bot.sendMessage(
+//                            TextMessage(
+//                                text = "desc set: ${res?.result}" ,
+//                                chatId = update.message.chat.id.toString(),
+//                                parseMode = "html"
+//                            )
+//                        )
                     }
-                }else if (update.message?.text?.contains("/get") == true) {
+                }else if (update.message?.text?.contains("/dlt") == true) {
                     if (update.message.from.id.toInt() == 867396070) {
-                        val res = bot.getMyShortDescription()
-                        bot.sendMessage(
-                            TextMessage(
-                                text = "desc get: ${res?.result?.shortDescription}" ,
+                        val res = bot.deleteMessage(
                                 chatId = update.message.chat.id.toString(),
-                                parseMode = "html"
-                            )
+                                messageId = update.message.replyToMessage?.messageId ?: 0
                         )
+//                        bot.sendMessage(
+//                            TextMessage(
+//                                text = "desc set: ${res?.result}" ,
+//                                chatId = update.message.chat.id.toString(),
+//                                parseMode = "html"
+//                            )
+//                        )
                     }
                 }
                 if (update.callbackQuery != null) {
+                    bot.editMessageText(
+                        EditTextMessage(
+                            chatId = update.callbackQuery.message.chat.id.toString(),
+                            text = "edited",
+                            messageId = update.callbackQuery.message.messageId,
+                            keyboard = InlineKeyboard(keyboard = listOf(listOf(InlineKeyboardItem("test2", "test2"))))
+                        )
+                    )
                     bot.answerCallbackQuery(
                         CallbackQuery(
                             id = update.callbackQuery.id,
                             text = "This is callback query!",
-                            url = "https://google.com",
                             showAlert = true
                         )
                     )
