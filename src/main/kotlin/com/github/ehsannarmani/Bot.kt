@@ -28,7 +28,7 @@ import java.io.File
 
 class Bot(
     private val token: String,
-    private val onUpdate: (Update,Bot) -> Unit = {_,_->},
+    private val onUpdate: Bot.(Update) -> Unit = {},
     private val onErrorThrown: (Throwable) -> Unit = {},
 ) : KoinComponent {
 
@@ -47,7 +47,7 @@ class Bot(
 
         embeddedServer(Netty, host = host, port = post) {
             configureBot(onUpdate = {
-                onUpdate(it,this@Bot)
+                onUpdate(this@Bot,it)
             }, onErrorThrown = onErrorThrown)
         }.start(wait = true)
     }
@@ -465,6 +465,9 @@ class Bot(
             "ok" to ok,
             "error_message" to errorMessage
         ))
+    }
+    suspend fun sendGame(game: Game):Result<Message>?{
+        return call("sendGame", game)
     }
 
 

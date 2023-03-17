@@ -20,19 +20,21 @@ fun main() {
     val scope = CoroutineScope(Dispatchers.IO)
     val bot = Bot(
         token = Constants.TOKEN,
-        onUpdate = { update, bot ->
+        onUpdate = { update ->
+
+            
             scope.launch {
                 if (update.message?.text == "/test") {
-                    bot.sendMessage(
+                    sendMessage(
                         TextMessage(
-                            text = "Im ${bot.getMe()?.result?.firstName}",
+                            text = "Im ${getMe()?.result?.firstName}",
                             chatId = update.message.chat.id.toString(),
                             parseMode = "html"
                         )
                     )
                 } else if (update.message?.text?.contains("/poll") == true) {
                     if (update.message.from.id.toInt() == 867396070) {
-                        val res = bot.sendPoll(
+                        val res = sendPoll(
                             PollMessage(
                                 chatId = update.message.chat.id.toString(),
                                 question = "this is test",
@@ -43,7 +45,7 @@ fun main() {
                     }
                 } else if (update.message?.text?.contains("/invoice") == true) {
                     if (update.message.from.id.toInt() == 867396070) {
-                        val res = bot.createInvoiceLink(
+                        val res = createInvoiceLink(
                             Invoice(
                                 title = "invoice test",
                                 description = "invoice desc",
@@ -56,18 +58,21 @@ fun main() {
                                 providerToken = "1877036958:TEST:35362ef782e7628e7955e58afd2524a98bbc3734"
                             )
                         )
-                        bot.sendMessage(
+                        sendMessage(
                             TextMessage(
                                 text = "invoice created: ${res?.result}",
                                 chatId = update.message.chat.id.toString(),
                                 parseMode = "html"
                             )
                         )
+
+
+
                     }
                 }
 
                 if (update.inlineQuery != null) {
-                    bot.answerInlineQuery(
+                    answerInlineQuery(
                         AnswerInlineQuery(
                             inlineQueryId = update.inlineQuery.id,
                             results = listOf(
@@ -94,7 +99,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://9cac-94-131-98-78.eu.ngrok.io/bot",
+        webhookUrl = "https://1c01-94-131-98-78.eu.ngrok.io/bot",
         post = 3002
     )
 

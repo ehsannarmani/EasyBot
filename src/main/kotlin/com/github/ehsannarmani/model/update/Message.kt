@@ -55,6 +55,8 @@ data class Message(
     val dice: Dice? = null,
     @SerialName("invoice")
     val invoice: Invoice? = null,
+    @SerialName("game")
+    val game: Game? = null,
     @SerialName("reply_markup")
     val replyMarkup:ReplyMarkup? = null,
     @SerialName("pinned_message")
@@ -94,9 +96,15 @@ data class Message(
         if (poll != null){
             messageType = MessageType.Poll
         }
+        if (game != null){
+            messageType = MessageType.Game
+        }
+        if (invoice != null){
+            messageType = MessageType.Invoice
+        }
     }
 }
 
 enum class MessageType{
-    Text,Photo,Audio,Voice,Document,Gif,Sticker,Poll
+    Text,Photo,Audio,Voice,Document,Gif,Sticker,Poll,Game,Invoice
 }
