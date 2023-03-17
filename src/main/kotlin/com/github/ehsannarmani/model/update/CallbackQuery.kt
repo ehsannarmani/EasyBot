@@ -10,7 +10,7 @@ data class CallbackQuery(
     @SerialName("from")
     val from: From,
     @SerialName("message")
-    val message: Message,
+    val message: Message? = null,
     @SerialName("chat_instance")
     val chatInstance:String,
     @SerialName("data")

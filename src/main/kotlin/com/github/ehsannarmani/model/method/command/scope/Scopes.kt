@@ -8,35 +8,30 @@ sealed class BotCommandScope
 
 
 @Serializable()
-@SerialName("default")
 data class BotCommandScopeDefault(
     @SerialName("type")
     val type:String = "default"
 ): BotCommandScope()
 
 @Serializable()
-@SerialName("all_private_chats")
 data class BotCommandScopeAllPrivateChats(
     @SerialName("type")
     val type:String = "all_private_chats"
 ): BotCommandScope()
 
 @Serializable()
-@SerialName("all_group_chats")
 data class BotCommandScopeAllGroupChats(
     @SerialName("type")
     val type:String = "all_group_chats"
 ): BotCommandScope()
 
 @Serializable()
-@SerialName("all_chat_administrators")
 data class BotCommandScopeAllChatAdministrators(
     @SerialName("type")
     val type:String = "all_chat_administrators"
 ): BotCommandScope()
 
 @Serializable()
-@SerialName("chat")
 data class BotCommandScopeChat(
     @SerialName("type")
     val type:String = "chat",
@@ -46,7 +41,6 @@ data class BotCommandScopeChat(
 
 
 @Serializable()
-@SerialName("chat_administrators")
 data class BotCommandScopeChatAdministrators(
     @SerialName("type")
     val type:String = "chat_administrators",
@@ -55,7 +49,6 @@ data class BotCommandScopeChatAdministrators(
 ): BotCommandScope()
 
 @Serializable()
-@SerialName("chat_member")
 data class BotCommandScopeChatMember(
     @SerialName("type")
     val type:String = "chat_member",

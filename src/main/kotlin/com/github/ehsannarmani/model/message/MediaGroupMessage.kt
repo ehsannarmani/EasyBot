@@ -28,7 +28,6 @@ sealed class InputMedia()
 
 
 @Serializable
-@SerialName("audio")
 data class InputMediaAudio(
     @SerialName("media")
     val media:String,
@@ -48,7 +47,6 @@ data class InputMediaAudio(
     val title:String? = null,
 ):InputMedia()
 @Serializable
-@SerialName("document")
 data class InputMediaDocument(
     @SerialName("media")
     val media:String,
@@ -64,7 +62,6 @@ data class InputMediaDocument(
     val disableContentTypeDetection:Boolean? = null,
 ):InputMedia()
 @Serializable
-@SerialName("photo")
 data class InputMediaPhoto(
     @SerialName("media")
     val media:String,
@@ -78,7 +75,6 @@ data class InputMediaPhoto(
     val hasSpoiler:Boolean? = null,
 ):InputMedia()
 @Serializable
-@SerialName("video")
 data class InputMediaVideo(
     @SerialName("media")
     val media:String,

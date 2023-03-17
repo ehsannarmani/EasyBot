@@ -5,6 +5,10 @@ import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
 import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
 import com.github.ehsannarmani.model.method.*
 import com.github.ehsannarmani.model.method.command.Commands
+import com.github.ehsannarmani.model.method.inline_query.AnswerInlineQuery
+import com.github.ehsannarmani.model.method.inline_query.InputMessageContent
+import com.github.ehsannarmani.model.method.inline_query.result.InlineQueryResultArticle
+import com.github.ehsannarmani.model.method.inline_query.result.InlineQueryResultContact
 import com.github.ehsannarmani.model.updating_messages.EditTextMessage
 import com.github.ehsannarmani.model.updating_messages.MessageReplyMarkup
 import com.github.ehsannarmani.utils.Constants
@@ -62,22 +66,23 @@ fun main() {
 //                        )
                     }
                 }
-                if (update.callbackQuery != null) {
-                    bot.editMessageText(
-                        EditTextMessage(
-                            chatId = update.callbackQuery.message.chat.id.toString(),
-                            text = "edited",
-                            messageId = update.callbackQuery.message.messageId,
-                            keyboard = InlineKeyboard(keyboard = listOf(listOf(InlineKeyboardItem("test2", "test2"))))
+
+                if (update.inlineQuery != null){
+                    bot.answerInlineQuery(AnswerInlineQuery(
+                        inlineQueryId = update.inlineQuery.id,
+                        results = listOf(
+                            InlineQueryResultArticle(
+                                title = "this is title",
+                                description = "this is description",
+                                inputMessageContent = InputMessageContent(
+                                    messageText = "here is test"
+                                ),
+                                keyboard = InlineKeyboard(
+                                    keyboard = listOf(listOf(InlineKeyboardItem("test","test")))
+                                )
+                            )
                         )
-                    )
-                    bot.answerCallbackQuery(
-                        CallbackQuery(
-                            id = update.callbackQuery.id,
-                            text = "This is callback query!",
-                            showAlert = true
-                        )
-                    )
+                    ))
                 }
             }
 
@@ -88,7 +93,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://65e5-94-131-98-78.eu.ngrok.io/bot",
+        webhookUrl = " https://8a79-94-131-98-78.eu.ngrok.io/bot",
         post = 3002
     )
 

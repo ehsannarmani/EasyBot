@@ -7,6 +7,7 @@ import com.github.ehsannarmani.model.method.*
 import com.github.ehsannarmani.model.method.command.AddCommands
 import com.github.ehsannarmani.model.method.command.BotCommand
 import com.github.ehsannarmani.model.method.command.Commands
+import com.github.ehsannarmani.model.method.inline_query.AnswerInlineQuery
 import com.github.ehsannarmani.model.result.*
 import com.github.ehsannarmani.model.update.ChatMember
 import com.github.ehsannarmani.model.update.Message
@@ -445,6 +446,9 @@ class Bot(
         return callWithMap("deleteStickerSet", listOf(
             "name" to name,
         ))
+    }
+    suspend fun answerInlineQuery(answer:AnswerInlineQuery):Result<Boolean>?{
+        return call("answerInlineQuery", answer)
     }
 
 
