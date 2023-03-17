@@ -9,12 +9,14 @@ import kotlinx.serialization.decodeFromString
 
 fun Application.configureBot(
     onUpdate:(Update)->Unit,
+    onTextUpdate:(String)->Unit,
     onErrorThrown:(Throwable)->Unit
 ) {
     routing {
         post("/bot"){
 
             val input = call.receiveText()
+            onTextUpdate(input)
             print(input)
             runCatching {
                 Json{

@@ -29,7 +29,8 @@ import java.io.File
 class Bot(
     private val token: String,
     private val onUpdate: Bot.(Update) -> Unit = {},
-    private val onErrorThrown: (Throwable) -> Unit = {},
+    private val onTextUpdate: Bot.(String) -> Unit = {},
+    private val onErrorThrown: Bot.(Throwable) -> Unit = {},
 ) : KoinComponent {
 
     private val client: HttpClient by inject()
@@ -48,7 +49,11 @@ class Bot(
         embeddedServer(Netty, host = host, port = post) {
             configureBot(onUpdate = {
                 onUpdate(this@Bot,it)
-            }, onErrorThrown = onErrorThrown)
+            }, onErrorThrown = {
+                onErrorThrown(this@Bot,it)
+            }, onTextUpdate = {
+                onTextUpdate(this@Bot,it)
+            })
         }.start(wait = true)
     }
 

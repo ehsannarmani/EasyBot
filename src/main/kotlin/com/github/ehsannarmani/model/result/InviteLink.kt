@@ -19,4 +19,10 @@ data class InviteLink(
     val isPrimary: Boolean? = null,
     @SerialName("is_revoked")
     val isRevoked: Boolean? = null,
+    @SerialName("expire_date")
+    val expireDate: Int? = null,
+    @SerialName("member_limit")
+    val memberLimit: Int? = null,
+    @SerialName("pending_join_request_count")
+    val pendingJoinRequestCount: Int? = null,
 )
