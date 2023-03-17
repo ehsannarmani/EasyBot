@@ -10,9 +10,9 @@ data class Sticker(
     @SerialName("height")
     val height:Int,
     @SerialName("emoji")
-    val emoji:String,
+    val emoji:String? = null,
     @SerialName("set_name")
-    val stickerSetName:String,
+    val stickerSetName:String? = null,
     @SerialName("is_animated")
     val isAnimated:Boolean,
     @SerialName("is_video")

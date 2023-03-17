@@ -44,11 +44,14 @@ fun main() {
 //                            )
 //                        )
                     }
-                }else if (update.message?.text?.contains("/dlt") == true) {
+                }else if (update.message?.text?.contains("/sticker") == true) {
                     if (update.message.from.id.toInt() == 867396070) {
-                        val res = bot.deleteMessage(
-                                chatId = update.message.chat.id.toString(),
-                                messageId = update.message.replyToMessage?.messageId ?: 0
+                        val res = bot.sendSticker(
+                                StickerMessage(
+                                    chatId = update.message.chat.id.toString(),
+                                    sticker = "https://filesamples.com/samples/image/webp/sample1.webp",
+                                    emoji = "\uD83D\uDE02"
+                                )
                         )
 //                        bot.sendMessage(
 //                            TextMessage(

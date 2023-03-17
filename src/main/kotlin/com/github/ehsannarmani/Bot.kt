@@ -379,6 +379,73 @@ class Bot(
             "message_id" to messageId
         ))
     }
+    suspend fun sendSticker(sticker:StickerMessage):Result<Message>?{
+        return call("sendSticker",sticker)
+    }
+    suspend fun getStickerSet(name:String):Result<StickerSet>?{
+        return callWithMap("getStickerSet", listOf("name" to name))
+    }
+    suspend fun getCustomEmojiStickers(customEmojiStickers: CustomEmojiStickers):Result<List<TopicSticker>>?{
+        return call("getCustomEmojiStickers", customEmojiStickers)
+    }
+    suspend fun uploadStickerFile(userId: Long,sticker:File,stickerFormat:String):Result<com.github.ehsannarmani.model.method.File>?{
+        return callWithMap("uploadStickerFile", listOf(
+            "user_id" to userId,
+            "sticker" to sticker,
+            "stickerFormat" to stickerFormat
+        ))
+    }
+    suspend fun createNewStickerSet(newStickerSet: NewStickerSet):Result<Boolean>?{
+        return call("createNewStickerSet", newStickerSet)
+    }
+    suspend fun addStickerToSet(stickerToSet: StickerToSet):Result<Boolean>?{
+        return call("addStickerToSet", stickerToSet)
+    }
+    suspend fun setStickerPositionInSet(sticker:String,position:Int):Result<Boolean>?{
+        return callWithMap("setStickerPositionInSet", listOf(
+            "sticker" to sticker,
+            "position" to position
+        ))
+    }
+    suspend fun deleteStickerFromSet(sticker:String):Result<Boolean>?{
+        return callWithMap("deleteStickerFromSet", listOf(
+            "sticker" to sticker,
+        ))
+    }
+    suspend fun setStickerEmojiList(stickerEmojiList: StickerEmojiList):Result<Boolean>?{
+        return call("setStickerEmojiList", stickerEmojiList)
+    }
+    suspend fun setStickerKeywords(stickerKeywords: StickerKeywords):Result<Boolean>?{
+        return call("setStickerKeywords", stickerKeywords)
+    }
+    suspend fun setStickerMaskPosition(stickerMaskPosition: StickerMaskPosition):Result<Boolean>?{
+        return call("setStickerMaskPosition", stickerMaskPosition)
+    }
+    suspend fun setStickerSetTitle(name:String,title: String):Result<Boolean>?{
+        return callWithMap("setStickerSetTitle", listOf(
+            "name" to name,
+            "title" to title,
+        ))
+    }
+    suspend fun setStickerSetThumbnail(stickerThumbnail: StickerThumbnail):Result<Boolean>?{
+        return call("setStickerSetThumbnail", stickerThumbnail)
+    }
+    suspend fun setCustomEmojiStickerSetThumbnail(name:String,customEmojiId: String):Result<Boolean>?{
+        return callWithMap("setCustomEmojiStickerSetThumbnail", listOf(
+            "name" to name,
+            "custom_emoji_id" to customEmojiId,
+        ))
+    }
+    suspend fun setCustomEmojiStickerSetThumbnail(name:String):Result<Boolean>?{
+        return callWithMap("setCustomEmojiStickerSetThumbnail", listOf(
+            "name" to name,
+        ))
+    }
+    suspend fun deleteStickerSet(name:String):Result<Boolean>?{
+        return callWithMap("deleteStickerSet", listOf(
+            "name" to name,
+        ))
+    }
 
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
