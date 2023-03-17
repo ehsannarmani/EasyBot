@@ -2,7 +2,11 @@ package com.github.ehsannarmani
 
 import com.github.ehsannarmani.model.*
 import com.github.ehsannarmani.model.message.*
+import com.github.ehsannarmani.model.message.keyboard.reply.ChatAdministratorRights
 import com.github.ehsannarmani.model.method.*
+import com.github.ehsannarmani.model.method.command.AddCommands
+import com.github.ehsannarmani.model.method.command.BotCommand
+import com.github.ehsannarmani.model.method.command.Commands
 import com.github.ehsannarmani.model.result.*
 import com.github.ehsannarmani.model.update.ChatMember
 import com.github.ehsannarmani.model.update.Message
@@ -239,6 +243,112 @@ class Bot(
         return callWithMap("deleteChatStickerSet", listOf(
             "chat_id" to chatId,
         ))
+    }
+    suspend fun getForumTopicIconStickers():Result<List<TopicSticker>>?{
+        return call("getForumTopicIconStickers", null)
+    }
+    suspend fun createForumTopic(topic: ForumTopic):Result<Topic>?{
+        return call("createForumTopic", topic)
+    }
+    suspend fun editForumTopic(topic: ForumTopic):Result<Boolean>?{
+        return call("editForumTopic", topic)
+    }
+    suspend fun closeForumTopic(chatId:String,messageThreadId:Int):Result<Boolean>?{
+        return callWithMap("closeForumTopic", listOf(
+            "chat_id" to chatId,
+            "message_thread_id" to messageThreadId
+        ))
+    }
+    suspend fun reopenForumTopic(chatId:String,messageThreadId:Int):Result<Boolean>?{
+        return callWithMap("reopenForumTopic", listOf(
+            "chat_id" to chatId,
+            "message_thread_id" to messageThreadId
+        ))
+    }
+    suspend fun deleteForumTopic(chatId:String,messageThreadId:Int):Result<Boolean>?{
+        return callWithMap("deleteForumTopic", listOf(
+            "chat_id" to chatId,
+            "message_thread_id" to messageThreadId
+        ))
+    }
+    suspend fun unpinAllForumTopicMessages(chatId:String,messageThreadId:Int):Result<Boolean>?{
+        return callWithMap("unpinAllForumTopicMessages", listOf(
+            "chat_id" to chatId,
+            "message_thread_id" to messageThreadId
+        ))
+    }
+    suspend fun editGeneralForumTopic(chatId:String,name:String):Result<Boolean>?{
+        return callWithMap("editGeneralForumTopic", listOf(
+            "chat_id" to chatId,
+            "name" to name
+        ))
+    }
+    suspend fun closeGeneralForumTopic(chatId:String):Result<Boolean>?{
+        return callWithMap("closeGeneralForumTopic", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun reopenGeneralForumTopic(chatId:String):Result<Boolean>?{
+        return callWithMap("reopenGeneralForumTopic", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun unhideGeneralForumTopic(chatId:String):Result<Boolean>?{
+        return callWithMap("unhideGeneralForumTopic", listOf(
+            "chat_id" to chatId,
+        ))
+    }
+    suspend fun answerCallbackQuery(callbackQuery: CallbackQuery):Result<Boolean>?{
+        return call("answerCallbackQuery",callbackQuery)
+    }
+    suspend fun setMyCommands(commands: AddCommands):Result<Boolean>?{
+        return call("setMyCommands",commands)
+    }
+    suspend fun deleteMyCommands(commands: Commands = Commands()):Result<Boolean>?{
+        return call("deleteMyCommands",commands)
+    }
+    suspend fun getMyCommands(commands: Commands = Commands()):Result<List<BotCommand>>?{
+        return call("getMyCommands",commands)
+    }
+    suspend fun setMyDescription(description: String,languageCode:String = "en"):Result<Boolean>?{
+        return callWithMap("setMyDescription", listOf(
+            "description" to description,
+            "language_code" to languageCode
+        ))
+    }
+    suspend fun getMyDescription(languageCode:String = "en"):Result<Description>?{
+        return callWithMap("getMyDescription", listOf(
+            "language_code" to languageCode
+        ))
+    }
+    suspend fun setMyShortDescription(shortDescription: String,languageCode:String = "en"):Result<Boolean>?{
+        return callWithMap("setMyShortDescription", listOf(
+            "short_description" to shortDescription,
+            "language_code" to languageCode
+        ))
+    }
+    suspend fun getMyShortDescription(languageCode:String = "en"):Result<ShortDescription>?{
+        return callWithMap("getMyShortDescription", listOf(
+            "language_code" to languageCode
+        ))
+    }
+    suspend fun setChatMenuButton(chatMenuButton:ChatMenuButton):Result<Boolean>?{
+        return call("setChatMenuButton", chatMenuButton)
+    }
+    suspend fun getChatMenuButton(chatId: Int):Result<MenuButton>?{
+        return call("getChatMenuButton", listOf("chat_id" to chatId))
+    }
+    suspend fun getChatMenuButton():Result<MenuButton>?{
+        return call("getChatMenuButton", null)
+    }
+    suspend fun setMyDefaultAdministratorRights(defaultAdministratorRights: DefaultAdministratorRights):Result<Boolean>?{
+        return call("setMyDefaultAdministratorRights", defaultAdministratorRights)
+    }
+    suspend fun getMyDefaultAdministratorRights(forChannels:Boolean):Result<ChatAdministratorRights>?{
+        return callWithMap("getMyDefaultAdministratorRights", listOf("for_channels" to forChannels))
+    }
+    suspend fun getMyDefaultAdministratorRights():Result<ChatAdministratorRights>?{
+        return call("getMyDefaultAdministratorRights",null)
     }
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
