@@ -23,7 +23,6 @@ fun main() {
         onUpdate = { update, bot ->
             scope.launch {
                 if (update.message?.text == "/test") {
-                    print("\n\n\n${bot.getMe()}")
                     bot.sendMessage(
                         TextMessage(
                             text = "Im ${bot.getMe()?.result?.firstName}",
@@ -35,54 +34,56 @@ fun main() {
                     if (update.message.from.id.toInt() == 867396070) {
                         val res = bot.sendPoll(
                             PollMessage(
-                            chatId = update.message.chat.id.toString(),
-                            question = "this is test",
-                            options = listOf("test1","test2")
+                                chatId = update.message.chat.id.toString(),
+                                question = "this is test",
+                                options = listOf("test1", "test2")
+                            )
                         )
-                        )
-//                        bot.sendMessage(
-//                            TextMessage(
-//                                text = "desc set: ${res?.result}" ,
-//                                chatId = update.message.chat.id.toString(),
-//                                parseMode = "html"
-//                            )
-//                        )
+
                     }
-                }else if (update.message?.text?.contains("/sticker") == true) {
+                } else if (update.message?.text?.contains("/invoice") == true) {
                     if (update.message.from.id.toInt() == 867396070) {
-                        val res = bot.sendSticker(
-                                StickerMessage(
-                                    chatId = update.message.chat.id.toString(),
-                                    sticker = "https://filesamples.com/samples/image/webp/sample1.webp",
-                                    emoji = "\uD83D\uDE02"
-                                )
+                        val res = bot.createInvoiceLink(
+                            Invoice(
+                                title = "invoice test",
+                                description = "invoice desc",
+                                currency = "ILS",
+                                payload = "test",
+                                prices = listOf(
+                                    LabeledPrice("price1", 15000),
+                                    LabeledPrice("price2", 1000)
+                                ),
+                                providerToken = "1877036958:TEST:35362ef782e7628e7955e58afd2524a98bbc3734"
+                            )
                         )
-//                        bot.sendMessage(
-//                            TextMessage(
-//                                text = "desc set: ${res?.result}" ,
-//                                chatId = update.message.chat.id.toString(),
-//                                parseMode = "html"
-//                            )
-//                        )
+                        bot.sendMessage(
+                            TextMessage(
+                                text = "invoice created: ${res?.result}",
+                                chatId = update.message.chat.id.toString(),
+                                parseMode = "html"
+                            )
+                        )
                     }
                 }
 
-                if (update.inlineQuery != null){
-                    bot.answerInlineQuery(AnswerInlineQuery(
-                        inlineQueryId = update.inlineQuery.id,
-                        results = listOf(
-                            InlineQueryResultArticle(
-                                title = "this is title",
-                                description = "this is description",
-                                inputMessageContent = InputMessageContent(
-                                    messageText = "here is test"
-                                ),
-                                keyboard = InlineKeyboard(
-                                    keyboard = listOf(listOf(InlineKeyboardItem("test","test")))
+                if (update.inlineQuery != null) {
+                    bot.answerInlineQuery(
+                        AnswerInlineQuery(
+                            inlineQueryId = update.inlineQuery.id,
+                            results = listOf(
+                                InlineQueryResultArticle(
+                                    title = "this is title",
+                                    description = "this is description",
+                                    inputMessageContent = InputMessageContent(
+                                        messageText = "here is test"
+                                    ),
+                                    keyboard = InlineKeyboard(
+                                        keyboard = listOf(listOf(InlineKeyboardItem("test", "test")))
+                                    )
                                 )
                             )
                         )
-                    ))
+                    )
                 }
             }
 
@@ -93,7 +94,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = " https://8a79-94-131-98-78.eu.ngrok.io/bot",
+        webhookUrl = "https://9cac-94-131-98-78.eu.ngrok.io/bot",
         post = 3002
     )
 

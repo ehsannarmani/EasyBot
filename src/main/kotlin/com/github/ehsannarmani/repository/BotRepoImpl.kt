@@ -39,7 +39,7 @@ class BotRepoImpl(val client: HttpClient) : BotRepo {
                             append(HttpHeaders.ContentDisposition, "filename=\"photo-${System.currentTimeMillis()}.png\"")
                         })
                     }else{
-                        append(it.first, it.second.toString())
+                        append(it.first, it.second)
                     }
                 }
             }) {

@@ -53,6 +53,8 @@ data class Message(
     val venue: Venue? = null,
     @SerialName("dice")
     val dice: Dice? = null,
+    @SerialName("invoice")
+    val invoice: Invoice? = null,
     @SerialName("reply_markup")
     val replyMarkup:ReplyMarkup? = null,
     @SerialName("pinned_message")

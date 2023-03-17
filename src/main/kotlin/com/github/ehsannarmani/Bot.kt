@@ -450,6 +450,22 @@ class Bot(
     suspend fun answerInlineQuery(answer:AnswerInlineQuery):Result<Boolean>?{
         return call("answerInlineQuery", answer)
     }
+    suspend fun sendInvoice(invoice: Invoice):Result<Message>?{
+        return call("sendInvoice", invoice)
+    }
+    suspend fun createInvoiceLink(invoice: Invoice):Result<String>?{
+        return call("createInvoiceLink", invoice)
+    }
+    suspend fun answerShippingQuery(shippingQuery: ShippingQuery):Result<Boolean>?{
+        return call("answerShippingQuery", shippingQuery)
+    }
+    suspend fun answerPreCheckoutQuery(preCheckoutQueryId:String, ok:Boolean, errorMessage:String):Result<Boolean>?{
+        return callWithMap("answerPreCheckoutQuery", listOf(
+            "pre_checkout_query_id" to preCheckoutQueryId,
+            "ok" to ok,
+            "error_message" to errorMessage
+        ))
+    }
 
 
     private suspend inline fun <reified T:Any> call(method:String, body:Any?):T?{
