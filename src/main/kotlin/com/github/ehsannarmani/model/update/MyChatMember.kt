@@ -1,5 +1,6 @@
 package com.github.ehsannarmani.model.update
 
+import com.github.ehsannarmani.model.result.Chat
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
