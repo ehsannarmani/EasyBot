@@ -1,6 +1,7 @@
 package com.github.ehsannarmani
 
 import com.github.ehsannarmani.model.*
+import com.github.ehsannarmani.model.database.UserData
 import com.github.ehsannarmani.model.message.*
 import com.github.ehsannarmani.model.message.keyboard.Keyboard
 import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
@@ -21,20 +22,19 @@ import com.github.ehsannarmani.model.update.Photo
 import com.github.ehsannarmani.model.updating_messages.*
 import com.github.ehsannarmani.plugins.configureBot
 import com.github.ehsannarmani.repository.BotRepo
-import com.github.ehsannarmani.utils.Constants
-import io.ktor.client.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
+import java.nio.file.Paths
 
 
 class Bot(
@@ -87,6 +87,20 @@ class Bot(
                 onTextUpdate(this@Bot, it)
             })
         }.start(wait = true)
+    }
+
+    inline fun <reified T> From.putData(key:String, data: T){
+        putData(UserData(
+            user = id,
+            key = key,
+            data = data
+        ))
+    }
+    inline fun <reified T> From.getData(key:String):T?{
+        return getData<T>(
+            user = this.id,
+            key = key
+        )?.data
     }
 
     suspend fun Message?.delete() {
@@ -963,5 +977,50 @@ class Bot(
             method,
             body
         )
+    }
+
+    inline fun <reified T>putData(data:UserData<T>) {
+        val info = data.data!!::class.qualifiedName?.replace("\\", ".")?.split(".")?.joinToString (separator = "\\"){ it.lowercase() }?.split("\\")
+        val fileName = info?.last()+".json"
+        val classPath = info?.filterIndexed { index,string-> index != info.lastIndex  }?.joinToString(separator = "\\")
+        var path = Paths.get("").toAbsolutePath().toString() + "\\database"
+        path+="\\$classPath"
+        println("\n${path} - ${File(path).exists()}")
+        File(path).also {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+            val dataFile = File("${path}/${fileName}")
+            if (!dataFile.exists()) {
+                dataFile.createNewFile()
+            }
+            var content = dataFile.readText()
+            var decoded = mutableListOf<UserData<T>>()
+            if (content.isNotEmpty()) {
+                decoded = Json.decodeFromString(content)
+            }
+
+            decoded.add(data)
+
+            val encoded = Json.encodeToString(decoded)
+            content = encoded
+            dataFile.writeText(content)
+        }
+    }
+    inline fun <reified T>getData(user: Long, key: String): UserData<T>? {
+        val path = Paths.get("").toAbsolutePath().toString() + "/database"
+        File(path).also {
+            if (!it.exists()) return null
+            val dbFileName = T::class.qualifiedName?.replace("/", ".")?.split(".")?.joinToString (separator = "/"){ it.lowercase() }
+            val data = File("${path}/${dbFileName}.json")
+            if (!data.exists()) return null
+            var content = data.readText()
+            var decoded = mutableListOf<UserData<T>>()
+            if (content.isNotEmpty()) {
+                decoded = Json.decodeFromString<List<UserData<T>>>(content).toMutableList()
+            }
+            return decoded.find { it.user == user && it.key == key }
+        }
+
     }
 }

@@ -1,1 +1,1 @@
-rootProject.name = "TelegramBotTemplate"
+rootProject.name = "EasyBot"

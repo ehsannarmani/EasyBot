@@ -1,6 +1,7 @@
 package com.github.ehsannarmani.repository
 
-import com.github.ehsannarmani.extensions.serializedPost
+import com.github.ehsannarmani.model.database.*
+import com.github.ehsannarmani.model.update.Photo
 import com.github.ehsannarmani.utils.Constants
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -8,9 +9,12 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.nio.file.Paths
 
 @OptIn(InternalAPI::class)
 class BotRepoImpl(val client: HttpClient) : BotRepo {
@@ -48,6 +52,8 @@ class BotRepoImpl(val client: HttpClient) : BotRepo {
         }.body()
         return result
     }
+
+
 
 
 }
