@@ -16,9 +16,10 @@ import java.io.File
 class BotRepoImpl(val client: HttpClient) : BotRepo {
     override suspend fun setWebhook(
         token: String,
-        url: String
+        url: String,
+        dropPendingUpdates:Boolean
     ) {
-        client.get("${Constants.BASE_URL}$token/setWebhook?url=$url&drop_pending_updates=true")
+        client.get("${Constants.BASE_URL}$token/setWebhook?url=$url&drop_pending_updates=$dropPendingUpdates")
     }
 
     override suspend fun callMethod(token: String, method: String, body: Any?): String {

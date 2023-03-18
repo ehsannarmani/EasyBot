@@ -2,7 +2,9 @@ package com.github.ehsannarmani
 
 import com.github.ehsannarmani.model.message.*
 import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
+import com.github.ehsannarmani.model.message.keyboard.ReplyKeyboard
 import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
+import com.github.ehsannarmani.model.message.keyboard.reply.ReplyKeyboardItem
 import com.github.ehsannarmani.model.method.*
 import com.github.ehsannarmani.model.method.command.Commands
 import com.github.ehsannarmani.model.method.inline_query.AnswerInlineQuery
@@ -16,34 +18,69 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+data class Product(val name: String)
+
+
 fun main() {
     val bot = Bot(
         token = Constants.TOKEN,
-        onUpdate = { update->
-            onMessage { msg->
+        onUpdate = { update ->
+            onMessage { msg ->
+                onText("t"){
+                    reply("t received")
+                }
                 onText {
-                    if (it == "some"){
-                        update.message.delete()
-                    }else if (it == "hi"){
-                       reply("How i can help you?")
+                    if (it == "hey"){
+
+                        reply(
+                            "hey!", keyboard = ReplyKeyboard(
+                                listOf(
+                                    listOf(
+                                        ReplyKeyboardItem(text = "Key 1", ).onCLick {
+                                            reply("you pressed key1 !")
+                                        },
+                                        ReplyKeyboardItem(text = "Key 2", ).onCLick {
+                                            reply("you pressed key2. !")
+                                        },
+                                    ),
+                                    listOf(
+                                        ReplyKeyboardItem(text = "Key 3", ).onCLick {
+                                            // do something
+                                        },
+                                        ReplyKeyboardItem(text = "Key 40", ).onCLick {
+                                            // do something
+                                        },
+                                    )
+                                ),
+                                resizeKeyboard = true
+                            )
+                        )
                     }
+                }
+                onVideo {
+
+                }
+                onDocument {
                 }
             }
             onCallbackQuery {
-                when(it.data){
-                    "yes"-> it.message.editText(text = "yes pressed")
-                    "no"-> {
+                when (it.data) {
+                    "yes" -> it.message.editText(text = "yes pressed")
+                    "no" -> {
                         it.answer("You pressed no, so this message will be delete")
                         it.message.delete()
                     }
-                    "ed"->{
-                        it.message.editKeyboard(newKeyboard = InlineKeyboard(
-                            listOf(
+
+                    "ed" -> {
+                        it.message.editKeyboard(
+                            newKeyboard = InlineKeyboard(
                                 listOf(
-                                    InlineKeyboardItem(text = "this is new keyboard", callbackData = "data")
+                                    listOf(
+                                        InlineKeyboardItem(text = "this is new keyboard", callbackData = "data")
+                                    )
                                 )
                             )
-                        ))
+                        )
                     }
                 }
             }
@@ -51,7 +88,7 @@ fun main() {
     )
 
     bot.launch(
-        webhookUrl = "https://76a0-94-131-98-78.eu.ngrok.io/bot",
+        webhookUrl = "https://c992-94-131-98-78.eu.ngrok.io/bot",
         post = 3002
     )
 

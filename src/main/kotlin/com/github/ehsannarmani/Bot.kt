@@ -3,7 +3,9 @@ package com.github.ehsannarmani
 import com.github.ehsannarmani.model.*
 import com.github.ehsannarmani.model.message.*
 import com.github.ehsannarmani.model.message.keyboard.Keyboard
+import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
 import com.github.ehsannarmani.model.message.keyboard.reply.ChatAdministratorRights
+import com.github.ehsannarmani.model.message.keyboard.reply.ReplyKeyboardItem
 import com.github.ehsannarmani.model.method.*
 import com.github.ehsannarmani.model.method.CallbackQuery
 import com.github.ehsannarmani.model.method.Game
@@ -25,9 +27,8 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -43,13 +44,50 @@ class Bot(
     private val onErrorThrown: Bot.(Throwable) -> Unit = {},
 ) : KoinComponent {
 
-    private val client: HttpClient by inject()
     private val repo: BotRepo by inject()
-    private val baseUrl = Constants.BASE_URL + token
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val _update: MutableSharedFlow<Update?> = MutableSharedFlow()
+    val update = _update.asSharedFlow()
+    var lastUpdate: Update? = null
 
-    private val _update: MutableStateFlow<Update?> = MutableStateFlow(null)
-    val update = _update.asStateFlow()
+
+    private val inlineKeyboardCollects = mutableListOf<String>()
+    private val replyKeyboardCollects = mutableListOf<String>()
+
+
+
+    fun launch(
+        post: Int = 3001,
+        host: String = "127.0.0.1",
+        webhookUrl: String = host,
+        dropPendingUpdates: Boolean = true
+    ) {
+        setupKoin()
+        val repo: BotRepo by inject()
+        setWebhook(
+            botRepo = repo,
+            token = token,
+            url = webhookUrl,
+            dropPendingUpdates = dropPendingUpdates
+        )
+
+        embeddedServer(Netty, host = host, port = post) {
+            configureBot(onUpdate = { update ->
+                lastUpdate = update
+                coroutineScope.launch {
+                    _update.emit(update)
+                    onUpdate(this@Bot, update)
+                }
+
+
+
+            }, onErrorThrown = {
+                onErrorThrown(this@Bot, it)
+            }, onTextUpdate = {
+                onTextUpdate(this@Bot, it)
+            })
+        }.start(wait = true)
+    }
 
     suspend fun Message?.delete() {
         deleteMessage(
@@ -115,140 +153,160 @@ class Bot(
         text: String,
         keyboard: Keyboard? = null,
     ) {
-        _update.value?.message?.reply(text, keyboard)
+        lastUpdate?.message?.reply(text, keyboard)
     }
-
-
-    fun launch(
-        post: Int = 3001,
-        host: String = "127.0.0.1",
-        webhookUrl: String = host
-    ) {
-        setupKoin()
-        val repo: BotRepo by inject()
-        setWebhook(repo, token, webhookUrl)
-
-        embeddedServer(Netty, host = host, port = post) {
-            configureBot(onUpdate = { update ->
-                _update.update { update }
-                coroutineScope.launch {
-                    onUpdate(this@Bot, update)
-                }
-            }, onErrorThrown = {
-                onErrorThrown(this@Bot, it)
-            }, onTextUpdate = {
-                onTextUpdate(this@Bot, it)
-            })
-        }.start(wait = true)
-    }
-
 
     suspend fun onText(block: suspend (String) -> Unit) {
-        if (_update.value?.message?.text != null) {
-            block(_update.value?.message?.text ?: "")
+        if (lastUpdate?.message?.text != null) {
+            block(lastUpdate?.message?.text ?: "")
+        }
+    }
+    suspend fun onText(filter:String,block: suspend (String) -> Unit) {
+        if (lastUpdate?.message?.text == filter) {
+            block(lastUpdate?.message?.text ?: "")
         }
     }
 
     suspend fun onPhoto(block: suspend (List<Photo>) -> Unit) {
-        if (_update.value?.message?.photo != null) {
-            block(_update.value?.message?.photo ?: listOf())
+        if (lastUpdate?.message?.photo != null) {
+            block(lastUpdate?.message?.photo ?: listOf())
         }
     }
 
     suspend fun onSticker(block: suspend (Sticker) -> Unit) {
-        if (_update.value?.message?.sticker != null) {
-            block(_update.value?.message?.sticker!!)
+        if (lastUpdate?.message?.sticker != null) {
+            block(lastUpdate?.message?.sticker!!)
         }
     }
 
     suspend fun onAnimation(block: suspend (Animation) -> Unit) {
-        if (_update.value?.message?.animation != null) {
-            block(_update.value?.message?.animation!!)
+        if (lastUpdate?.message?.animation != null) {
+            block(lastUpdate?.message?.animation!!)
         }
     }
 
     suspend fun onDocument(block: suspend (Document) -> Unit) {
-        if (_update.value?.message?.document != null) {
-            block(_update.value?.message?.document!!)
+        if (lastUpdate?.message?.document != null) {
+            block(lastUpdate?.message?.document!!)
         }
     }
 
     suspend fun onAudio(block: suspend (Audio) -> Unit) {
-        if (_update.value?.message?.audio != null) {
-            block(_update.value?.message?.audio!!)
+        if (lastUpdate?.message?.audio != null) {
+            block(lastUpdate?.message?.audio!!)
         }
     }
 
     suspend fun onVoice(block: suspend (Voice) -> Unit) {
-        if (_update.value?.message?.voice != null) {
-            block(_update.value?.message?.voice!!)
+        if (lastUpdate?.message?.voice != null) {
+            block(lastUpdate?.message?.voice!!)
         }
     }
 
     suspend fun onVideo(block: suspend (Video) -> Unit) {
-        if (_update.value?.message?.video != null) {
-            block(_update.value?.message?.video!!)
+        if (lastUpdate?.message?.video != null) {
+            block(lastUpdate?.message?.video!!)
         }
     }
 
     suspend fun onVideoNote(block: suspend (VideoNote) -> Unit) {
-        if (_update.value?.message?.videoNote != null) {
-            block(_update.value?.message?.videoNote!!)
+        if (lastUpdate?.message?.videoNote != null) {
+            block(lastUpdate?.message?.videoNote!!)
         }
     }
 
     suspend fun onPoll(block: suspend (Poll) -> Unit) {
-        if (_update.value?.message?.poll != null) {
-            block(_update.value?.message?.poll!!)
+        if (lastUpdate?.message?.poll != null) {
+            block(lastUpdate?.message?.poll!!)
         }
     }
 
     suspend fun onContact(block: suspend (Contact) -> Unit) {
-        if (_update.value?.message?.contact != null) {
-            block(_update.value?.message?.contact!!)
+        if (lastUpdate?.message?.contact != null) {
+            block(lastUpdate?.message?.contact!!)
         }
     }
 
     suspend fun onLocation(block: suspend (Location) -> Unit) {
-        if (_update.value?.message?.location != null) {
-            block(_update.value?.message?.location!!)
+        if (lastUpdate?.message?.location != null) {
+            block(lastUpdate?.message?.location!!)
         }
     }
 
     suspend fun onVenue(block: suspend (Venue) -> Unit) {
-        if (_update.value?.message?.venue != null) {
-            block(_update.value?.message?.venue!!)
+        if (lastUpdate?.message?.venue != null) {
+            block(lastUpdate?.message?.venue!!)
         }
     }
 
     suspend fun onInvoice(block: suspend (com.github.ehsannarmani.model.update.Invoice) -> Unit) {
-        if (_update.value?.message?.invoice != null) {
-            block(_update.value?.message?.invoice!!)
+        if (lastUpdate?.message?.invoice != null) {
+            block(lastUpdate?.message?.invoice!!)
         }
     }
 
     suspend fun onGame(block: suspend (com.github.ehsannarmani.model.update.Game) -> Unit) {
-        if (_update.value?.message?.game != null) {
-            block(_update.value?.message?.game!!)
+        if (lastUpdate?.message?.game != null) {
+            block(lastUpdate?.message?.game!!)
         }
     }
 
     suspend fun onCallbackQuery(block: suspend (com.github.ehsannarmani.model.update.CallbackQuery) -> Unit) {
-        if (_update.value?.callbackQuery != null) {
-            block(_update.value?.callbackQuery!!)
+        if (lastUpdate?.callbackQuery != null) {
+            block(lastUpdate?.callbackQuery!!)
         }
     }
 
     suspend fun onInlineQuery(block: suspend (InlineQuery) -> Unit) {
-        if (_update.value?.inlineQuery != null) {
-            block(_update.value?.inlineQuery!!)
+        if (lastUpdate?.inlineQuery != null) {
+            block(lastUpdate?.inlineQuery!!)
         }
     }
 
     suspend fun onMessage(block: suspend (Message) -> Unit) {
-        if (_update.value?.message != null) {
-            block(_update.value?.message!!)
+        if (lastUpdate?.message != null) {
+            block(lastUpdate?.message!!)
         }
+    }
+    suspend fun onCallbackData(data:String,block: suspend (com.github.ehsannarmani.model.update.CallbackQuery) -> Unit) {
+        if (lastUpdate?.callbackQuery?.data == data) {
+            block(lastUpdate?.callbackQuery!!)
+        }
+    }
+    suspend fun <T>From.put(key:String,value:T){
+
+    }
+    suspend fun <T>From.get(key:String):T{
+        TODO()
+    }
+
+    suspend fun InlineKeyboardItem.onCLick(onClick:suspend (com.github.ehsannarmani.model.update.CallbackQuery)->Unit):InlineKeyboardItem{
+        callbackData?.let {
+            coroutineScope.launch {
+                if (this@onCLick.callbackData !in inlineKeyboardCollects){
+                    inlineKeyboardCollects.add(this@onCLick.callbackData)
+                    _update.collect{
+                        if(it?.callbackQuery?.data == this@onCLick.callbackData){
+                            onClick(it.callbackQuery)
+                        }
+                    }
+                }
+            }
+        }
+        return this
+    }
+    suspend fun ReplyKeyboardItem.onCLick(onClick:suspend (Message)->Unit): ReplyKeyboardItem {
+        coroutineScope.launch {
+            if (this@onCLick.text !in replyKeyboardCollects){
+                replyKeyboardCollects.add(this@onCLick.text)
+                update.collect{
+                    if(it?.message?.text == this@onCLick.text){
+                        onClick(it.message)
+                    }
+                }
+            }
+        }
+        return this
     }
 
 
