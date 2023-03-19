@@ -44,4 +44,6 @@ dependencies {
     implementation("io.insert-koin:koin-core:$koin_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.14.2")
+
 }

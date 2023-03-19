@@ -1,5 +1,6 @@
 package com.github.ehsannarmani
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.github.ehsannarmani.model.message.*
 import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
 import com.github.ehsannarmani.model.message.keyboard.ReplyKeyboard
@@ -19,59 +20,52 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.koin.ext.getFullName
+import java.lang.reflect.ParameterizedType
+import kotlin.reflect.full.starProjectedType
 
 
 @Serializable
-data class Grades(
-    @SerialName("grades") val grades:List<Int>,
-    @SerialName("parent") val parent:String
+data class Media<T>(
+    @SerialName("name") val name: String,
+    @SerialName("media") val media: T,
 )
+
+@Serializable
+data class Grade(@SerialName("grade") val grade:String)
+
+
+
+
 
 fun main() {
     val bot = Bot(
         token = Constants.TOKEN,
         onUpdate = { update ->
-            onMessage { msg->
-                onText("db"){
+            onMessage { msg ->
+                onText("db") {
+
                     msg.from.putData(
-                        key = "grades",
-                        data = Grades(grades = listOf(1,2,3), parent = "ehsan")
-                    )
-                    msg.from.putData(
-                        key = "grades_list",
-                        data = arrayListOf(
-                            Grades(grades = listOf(1,2,3), parent = "ehsan"),
-                            Grades(grades = listOf(3,4,5), parent = "ali")
+                        key = "media2",
+                        data = Media(
+                            name = "media2",
+                            media = Grade("grade name")
                         )
                     )
-                    msg.from.putData(
-                        key = "name",
-                        data = "ehsan"
-                    )
-                    msg.from.putData(
-                        key = "age",
-                        data = 18
-                    )
-                    msg.from.putData(
-                        key = "isDead",
-                        data = false
-                    )
                 }
-                onText("get"){
-                    val grades = msg.from.getData<Grades>("grades")
-                    val listOfGrades = msg.from.getData<ArrayList<Grades>>("grades_list")
-                    val name = msg.from.getData<String>("name")
-                    val age = msg.from.getData<Int>("age")
-                    val isDead = msg.from.getData<Boolean>("isDead")
-                    println("\n\n$grades\n$listOfGrades\n$name\n$age\n$isDead")
+                onText("get") {
+                    println("\n\n${
+                        msg.from.getData<Media<Grade>>()
+                    }")
                 }
+
             }
 
         }
     )
 
     bot.launch(
-        webhookUrl = "https://5591-94-131-98-78.eu.ngrok.io/bot",
+        webhookUrl = "https://393b-94-131-98-78.eu.ngrok.io/bot",
         post = 3002
     )
 

@@ -1,5 +1,6 @@
 package com.github.ehsannarmani
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.github.ehsannarmani.model.*
 import com.github.ehsannarmani.model.database.UserData
 import com.github.ehsannarmani.model.message.*
@@ -34,6 +35,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
+import java.lang.reflect.ParameterizedType
 import java.nio.file.Paths
 
 
@@ -89,6 +91,12 @@ class Bot(
         }.start(wait = true)
     }
 
+
+    /**
+     * Use method for saving data in any types for user.
+     *
+     * If you savin classes as data, you must mark class as @Serializable annotation
+     */
     inline fun <reified T> From.putData(key:String, data: T){
         putData(UserData(
             user = id,
@@ -96,11 +104,73 @@ class Bot(
             data = data
         ))
     }
+
+    /**
+     * Use method for getting last saved data with key in type for user.
+     *
+     * For example: if you saved two string data with 'name' key, it gives to you last saved item
+     */
     inline fun <reified T> From.getData(key:String):T?{
         return getData<T>(
             user = this.id,
             key = key
         )?.data
+    }
+
+    /**
+     * Use this method for get total data saved in a type
+     */
+    inline fun <reified T> From.getData():List<T>{
+        return getAllData<T>(
+            user = this.id,
+        ).map { it.data }
+    }
+
+    /**
+     * Use this method for get list of data saved with some keys in a type
+     *
+     * For example : if you saved two strings with 'name' key, it gives to you two items with 'name' key
+     */
+    inline fun <reified T> From.getDataList(key:String):List<T>{
+        return getAllData<T>(
+            user = this.id,
+            key = key
+        ).map { it.data }
+    }
+
+    /**
+     * Use this method for edit saved data with some keys in type
+     *
+     * For example : if you saved two strings with 'name' key, if you will edit that, last item will be edited
+     *
+     */
+    inline fun <reified T> From.editData(key:String,newData:T){
+        editData(
+            newData = UserData(
+                user = this.id,
+                key = key,
+                data = newData
+            ),
+        )
+    }
+
+    /**
+     * Use this method for delete saved data with some keys in type
+     */
+    inline fun <reified T> From.deleteData(key:String){
+        deleteData<T>(
+            user = this.id,
+            key = key
+        )
+    }
+
+    /**
+     * Use this method for delete all saved data in type for user
+     */
+    inline fun <reified T> From.deleteData(){
+        deleteAllData<T>(
+            user = this.id,
+        )
     }
 
     suspend fun Message?.delete() {
@@ -980,17 +1050,14 @@ class Bot(
     }
 
     inline fun <reified T>putData(data:UserData<T>) {
-        val info = data.data!!::class.qualifiedName?.replace("\\", ".")?.split(".")?.joinToString (separator = "\\"){ it.lowercase() }?.split("\\")
-        val fileName = info?.last()+".json"
-        val classPath = info?.filterIndexed { index,string-> index != info.lastIndex  }?.joinToString(separator = "\\")
-        var path = Paths.get("").toAbsolutePath().toString() + "\\database"
-        path+="\\$classPath"
-        println("\n${path} - ${File(path).exists()}")
+        var path = Paths.get("").toAbsolutePath().toString() + "/database"
+        val dbPath = buildDBPath<T>()
+        path+= "\\"+dbPath.path
         File(path).also {
             if (!it.exists()) {
                 it.mkdirs()
             }
-            val dataFile = File("${path}/${fileName}")
+            val dataFile = File("${path}/${dbPath.fileName}")
             if (!dataFile.exists()) {
                 dataFile.createNewFile()
             }
@@ -1007,20 +1074,127 @@ class Bot(
             dataFile.writeText(content)
         }
     }
+    inline fun <reified T>editData(newData:UserData<T>) {
+        var path = Paths.get("").toAbsolutePath().toString() + "/database"
+        val dbPath = buildDBPath<T>()
+        path+= "\\"+dbPath.path
+        println("\n${path} - ${File(path).exists()}")
+        File(path).also {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+            val dataFile = File("${path}/${dbPath.fileName}")
+            if (!dataFile.exists()) {
+                dataFile.createNewFile()
+            }
+            var content = dataFile.readText()
+            var decoded = mutableListOf<UserData<T>>()
+            if (content.isNotEmpty()) {
+                decoded = Json.decodeFromString(content)
+            }
+
+            val find = decoded.filter { it.user == newData.user && it.key == newData.key }
+            val finalFind = find.last()
+            val findIndex = decoded.indexOf(finalFind)
+            decoded[findIndex] = newData
+
+            val encoded = Json.encodeToString(decoded)
+            content = encoded
+            dataFile.writeText(content)
+        }
+    }
+    inline fun <reified T>deleteData(user: Long,key: String) {
+        var path = Paths.get("").toAbsolutePath().toString() + "/database"
+        val dbPath = buildDBPath<T>()
+        path+= "\\"+dbPath.path
+        File(path).also {
+            if (!it.exists()) return
+            val dataFile = File("${path}/${dbPath.fileName}")
+            if (!dataFile.exists()) return
+            var content = dataFile.readText()
+            var decoded = mutableListOf<UserData<T>>()
+            if (content.isNotEmpty()) {
+                decoded = Json.decodeFromString(content)
+            }
+
+            decoded.removeIf { it.user ==user && it.key == key }
+
+            val encoded = Json.encodeToString(decoded)
+            content = encoded
+            dataFile.writeText(content)
+        }
+    }
+    inline fun <reified T>deleteAllData(user: Long) {
+        var path = Paths.get("").toAbsolutePath().toString() + "/database"
+        val dbPath = buildDBPath<T>()
+        path+= "\\"+dbPath.path
+        File(path).also {
+            if (!it.exists()) return
+            val dataFile = File("${path}/${dbPath.fileName}")
+            if (!dataFile.exists()) return
+            var content = dataFile.readText()
+            var decoded = mutableListOf<UserData<T>>()
+            if (content.isNotEmpty()) {
+                decoded = Json.decodeFromString(content)
+            }
+
+            decoded.removeIf { it.user ==user}
+
+            val encoded = Json.encodeToString(decoded)
+            content = encoded
+            dataFile.writeText(content)
+        }
+    }
     inline fun <reified T>getData(user: Long, key: String): UserData<T>? {
-        val path = Paths.get("").toAbsolutePath().toString() + "/database"
+        return getDecodedData<T>()?.lastOrNull { it.user == user && it.key == key }
+    }
+    inline fun <reified T>getAllData(user: Long): List<UserData<T>> {
+        return getDecodedData<T>()?.filter { it.user == user} ?: listOf()
+    }
+    inline fun <reified T>getAllData(user: Long,key: String): List<UserData<T>> {
+        return getDecodedData<T>()?.filter { it.user == user && it.key == key} ?: listOf()
+    }
+    data class DBPath(
+        val path: String,
+        val fileName:String
+    )
+
+    inline fun <reified T> getDecodedData(): MutableList<UserData<T>>? {
+        var path = Paths.get("").toAbsolutePath().toString() + "/database"
+        val dbPath = buildDBPath<T>()
+        path+= "\\"+dbPath.path
         File(path).also {
             if (!it.exists()) return null
-            val dbFileName = T::class.qualifiedName?.replace("/", ".")?.split(".")?.joinToString (separator = "/"){ it.lowercase() }
-            val data = File("${path}/${dbFileName}.json")
+            val data = File("${path}/${dbPath.fileName}")
+
             if (!data.exists()) return null
             var content = data.readText()
             var decoded = mutableListOf<UserData<T>>()
             if (content.isNotEmpty()) {
                 decoded = Json.decodeFromString<List<UserData<T>>>(content).toMutableList()
             }
-            return decoded.find { it.user == user && it.key == key }
+            return decoded
         }
-
+    }
+    inline fun <reified T> buildDBPath(): DBPath {
+        val convertPackageNameToPath:(String?)->String = {
+            it?.split(".")?.joinToString(separator = "\\") { it.lowercase() } ?: ""
+        }
+        val typeClass = T::class
+        var path = convertPackageNameToPath(typeClass.qualifiedName)
+        val type = object : TypeReference<T>() {}.type
+        if (type is ParameterizedType){
+            if (type.actualTypeArguments.count() == 1){
+                path += "\\"+convertPackageNameToPath(type.actualTypeArguments.first().typeName)
+            }else{
+                throw Throwable("Only one generics supported in saving user data")
+            }
+        }
+        val fileName = path.split("\\").last()
+        val dir = path.replace("\\${fileName}","")
+        return DBPath(
+            path = dir,
+            fileName = fileName+"_data.json",
+        )
     }
 }
