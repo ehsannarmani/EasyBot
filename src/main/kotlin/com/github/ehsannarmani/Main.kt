@@ -38,15 +38,19 @@ fun main() {
                 onText("users"){
                     println("\nusers: ${getUsers()}")
                 }
+                onText("polling"){
+                    reply("polling working successfully")
+                }
 
             }
 
         }
     )
 
-    bot.launch(
-        webhookUrl = "https://393b-94-131-98-78.eu.ngrok.io/bot",
-        post = 3002
-    )
+    bot.startPolling()
+//    bot.launch(
+//        webhookUrl = "https://393b-94-131-98-78.eu.ngrok.io/bot",
+//        post = 3002
+//    )
 
 }

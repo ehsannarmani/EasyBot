@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -56,6 +57,9 @@ class Bot(
     private val inlineKeyboardCollects = mutableListOf<String>()
     private val replyKeyboardCollects = mutableListOf<String>()
 
+    init {
+        setupKoin()
+    }
 
 
     fun launch(
@@ -64,7 +68,6 @@ class Bot(
         webhookUrl: String = host,
         dropPendingUpdates: Boolean = true
     ) {
-        setupKoin()
         val repo: BotRepo by inject()
         setWebhook(
             botRepo = repo,
@@ -75,17 +78,63 @@ class Bot(
 
         embeddedServer(Netty, host = host, port = post) {
             configureBot(onUpdate = { update ->
-                lastUpdate = update
-                coroutineScope.launch {
-                    _update.emit(update)
-                    onUpdate(this@Bot, update)
-                }
+                handleUpdate(update)
             }, onErrorThrown = {
                 onErrorThrown(this@Bot, it)
             }, onTextUpdate = {
                 onTextUpdate(this@Bot, it)
             })
         }.start(wait = true)
+    }
+
+    private fun handleUpdate(update: Update) {
+        lastUpdate = update
+        coroutineScope.launch {
+            _update.emit(update)
+            onUpdate(this@Bot, update)
+        }
+    }
+
+    fun startPolling(timeout:Int = 60){
+        val repo: BotRepo by inject()
+        runBlocking(Dispatchers.IO) {
+            println("\ncoroutine")
+            runCatching {
+                if (lastUpdate != null){
+                    repo.getUpdates(
+                        token = token,
+                        offset = (lastUpdate!!.updateId +1).toString(),
+                        timeout = timeout
+                    )
+                }else{
+                    repo.getUpdates(
+                        token = token,
+                        timeout = timeout
+                    )
+                }
+            }.onFailure {
+                println("\nonFailure ${it.message}")
+                startPolling(timeout)
+            }.onSuccess {
+                println("\nonSuccess :$it")
+                runCatching {
+                    Json{
+                        ignoreUnknownKeys = true
+                    }.decodeFromString<Result<List<Update>>>(it)
+                }
+                    .onSuccess{
+                        println("\n update success")
+                        it.result?.forEach {
+                            handleUpdate(it)
+                        }
+                    }
+                    .onFailure{
+                        println("\n update error: ${it.message}")
+                        onErrorThrown(this@Bot,it)
+                    }
+                startPolling()
+            }
+        }
     }
 
 

@@ -2,9 +2,11 @@ package com.github.ehsannarmani.repository
 
 import com.github.ehsannarmani.model.database.*
 import com.github.ehsannarmani.model.update.Photo
+import com.github.ehsannarmani.model.update.Update
 import com.github.ehsannarmani.utils.Constants
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
@@ -51,6 +53,22 @@ class BotRepoImpl(val client: HttpClient) : BotRepo {
             this.method = HttpMethod.Post
         }.body()
         return result
+    }
+
+    override suspend fun getUpdates(token: String,offset: String, timeout: Int): String {
+        return client.get("https://api.telegram.org/bot$token/getUpdates?timeout=$timeout&offset=$offset"){
+            this.timeout {
+                requestTimeoutMillis = timeout.toLong()*1000
+            }
+        }.body()
+    }
+
+    override suspend fun getUpdates(token: String, timeout: Int): String {
+        return client.get("https://api.telegram.org/bot$token/getUpdates?timeout=$timeout"){
+            this.timeout {
+                requestTimeoutMillis = timeout.toLong()*1000
+            }
+        }.body()
     }
 
 

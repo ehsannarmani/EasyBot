@@ -10,20 +10,20 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.serializer
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-fun setupKoin(){
+fun setupKoin() {
     startKoin {
         modules(module {
             single {
-                HttpClient(CIO){
+                HttpClient(CIO) {
                     expectSuccess = false
-//                    install(Logging){
+//                    install(Logging) {
 //                        level = LogLevel.BODY
 //                    }
-                    install(ContentNegotiation){
+                    install(HttpTimeout)
+                    install(ContentNegotiation) {
                         json(Json {
                             ignoreUnknownKeys = true
                             encodeDefaults = true
@@ -32,13 +32,13 @@ fun setupKoin(){
                         })
                     }
                     defaultRequest {
-                        header("Content-Type","application/json")
+                        header("Content-Type", "application/json")
                     }
 
                 }
             }
             single {
-                val botRepo:BotRepo = BotRepoImpl(client = get())
+                val botRepo: BotRepo = BotRepoImpl(client = get())
                 botRepo
             }
         })
