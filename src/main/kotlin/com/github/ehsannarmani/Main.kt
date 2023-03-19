@@ -43,20 +43,13 @@ fun main() {
         token = Constants.TOKEN,
         onUpdate = { update ->
             onMessage { msg ->
-                onText("db") {
-
-                    msg.from.putData(
-                        key = "media2",
-                        data = Media(
-                            name = "media2",
-                            media = Grade("grade name")
-                        )
-                    )
+                onText("/start"){
+                    update.message?.from?.reRegister()
+                    println("registered")
                 }
-                onText("get") {
-                    println("\n\n${
-                        msg.from.getData<Media<Grade>>()
-                    }")
+
+                onText("users"){
+                    println("\nusers: ${getUsers()}")
                 }
 
             }

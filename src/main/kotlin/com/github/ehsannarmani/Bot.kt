@@ -80,9 +80,6 @@ class Bot(
                     _update.emit(update)
                     onUpdate(this@Bot, update)
                 }
-
-
-
             }, onErrorThrown = {
                 onErrorThrown(this@Bot, it)
             }, onTextUpdate = {
@@ -124,6 +121,13 @@ class Bot(
         return getAllData<T>(
             user = this.id,
         ).map { it.data }
+    }
+
+    /**
+     * Use this method for get total data saved in a type
+     */
+    inline fun <reified T> getData():List<T>{
+        return getAllData<T>().map { it.data }
     }
 
     /**
@@ -178,6 +182,23 @@ class Bot(
             chatId = this?.chat?.id.toString(),
             messageId = this?.messageId ?: 0
         )
+    }
+
+    fun From.register(){
+        if (getData<From>("self") == null){
+            putData("self",this)
+        }
+    }
+    fun From.reRegister(){
+        deleteData<From>("self")
+        register()
+    }
+
+    fun From.getSelf():From?{
+        return getData("self")
+    }
+    fun getUsers():List<From>{
+        return getData()
     }
 
     suspend fun com.github.ehsannarmani.model.update.CallbackQuery?.answer(
@@ -1004,6 +1025,15 @@ class Bot(
         return call("getGameHighScores", highScores)
     }
 
+    fun From.setStep(step:String){
+        putData("step",step)
+    }
+    fun From.getStep():String?{
+        return getData<String>("step")
+    }
+    fun From.deleteStep(){
+        deleteData<String>("step")
+    }
 
     private suspend inline fun <reified T : Any> call(method: String, body: Any?): T? {
         val res = repo.callMethod(
@@ -1150,6 +1180,9 @@ class Bot(
     }
     inline fun <reified T>getAllData(user: Long): List<UserData<T>> {
         return getDecodedData<T>()?.filter { it.user == user} ?: listOf()
+    }
+    inline fun <reified T>getAllData(): List<UserData<T>> {
+        return getDecodedData() ?: listOf()
     }
     inline fun <reified T>getAllData(user: Long,key: String): List<UserData<T>> {
         return getDecodedData<T>()?.filter { it.user == user && it.key == key} ?: listOf()
