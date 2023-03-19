@@ -25,19 +25,6 @@ import java.lang.reflect.ParameterizedType
 import kotlin.reflect.full.starProjectedType
 
 
-@Serializable
-data class Media<T>(
-    @SerialName("name") val name: String,
-    @SerialName("media") val media: T,
-)
-
-@Serializable
-data class Grade(@SerialName("grade") val grade:String)
-
-
-
-
-
 fun main() {
     val bot = Bot(
         token = Constants.TOKEN,

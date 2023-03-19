@@ -94,8 +94,8 @@ class Bot(
      *
      * If you savin classes as data, you must mark class as @Serializable annotation
      */
-    inline fun <reified T> From.putData(key:String, data: T){
-        putData(UserData(
+    inline fun <reified T> From.put(key:String, data: T){
+        put(UserData(
             user = id,
             key = key,
             data = data
@@ -107,9 +107,9 @@ class Bot(
      *
      * For example: if you saved two string data with 'name' key, it gives to you last saved item
      */
-    inline fun <reified T> From.getData(key:String):T?{
-        return getData<T>(
-            user = this.id,
+    inline fun <reified T> From.get(key:String):T?{
+        return get<T>(
+            user = id,
             key = key
         )?.data
     }
@@ -126,7 +126,7 @@ class Bot(
     /**
      * Use this method for get total data saved in a type
      */
-    inline fun <reified T> getData():List<T>{
+    inline fun <reified T> get():List<T>{
         return getAllData<T>().map { it.data }
     }
 
@@ -177,6 +177,10 @@ class Bot(
         )
     }
 
+    /**
+     * Use this method to delete message
+     */
+
     suspend fun Message?.delete() {
         deleteMessage(
             chatId = this?.chat?.id.toString(),
@@ -184,23 +188,44 @@ class Bot(
         )
     }
 
+    /**
+     * Use this method to register user data
+     */
     fun From.register(){
-        if (getData<From>("self") == null){
-            putData("self",this)
+        if (get<From>("self") == null){
+            put("self",this)
         }
     }
+
+    /**
+     * Use this method when you want registered user delete, and register again
+     */
     fun From.reRegister(){
         deleteData<From>("self")
         register()
     }
 
+
+    /**
+     * Use this method to get registered data
+     */
     fun From.getSelf():From?{
-        return getData("self")
-    }
-    fun getUsers():List<From>{
-        return getData()
+        return get("self")
     }
 
+    /**
+     * Use this method to get all of registered users
+     */
+    fun getUsers():List<From>{
+        return get()
+    }
+
+
+    /**
+     * Use this method to answer the callback query
+     *
+     * Note: if you want to answer in alert dialog, pass true to alert field
+     */
     suspend fun com.github.ehsannarmani.model.update.CallbackQuery?.answer(
         text: String,
         alert: Boolean = false,
@@ -216,6 +241,9 @@ class Bot(
         )
     }
 
+    /**
+     * Use this method on message to edit that
+     */
     suspend fun Message?.editText(text: String, parseMode: String = "markdown", keyboard: Keyboard? = null) {
         editMessageText(
             EditTextMessage(
@@ -229,6 +257,9 @@ class Bot(
         )
     }
 
+    /**
+     * Use this method on message to edit that message keyboard
+     */
     suspend fun Message?.editKeyboard(newKeyboard: Keyboard) {
         editMessageReplyMarkup(
             MessageReplyMarkup(
@@ -239,6 +270,10 @@ class Bot(
         )
     }
 
+
+    /**
+     * Use this method on message to reply on message
+     */
     suspend fun Message?.reply(
         text: String,
         keyboard: Keyboard? = null,
@@ -254,6 +289,9 @@ class Bot(
         )
     }
 
+    /**
+     * Use this method to reply on last message received
+     */
     suspend fun reply(
         text: String,
         keyboard: Keyboard? = null,
@@ -261,130 +299,196 @@ class Bot(
         lastUpdate?.message?.reply(text, keyboard)
     }
 
+    /**
+     * Use this method to listen text messages
+     */
     suspend fun onText(block: suspend (String) -> Unit) {
         if (lastUpdate?.message?.text != null) {
             block(lastUpdate?.message?.text ?: "")
         }
     }
+
+    /**
+     * Use this method to listen text message you want
+     *
+     * Example: if you want to listen on 'hello' message you can use it like: onText("hello"){ ... }
+     */
     suspend fun onText(filter:String,block: suspend (String) -> Unit) {
         if (lastUpdate?.message?.text == filter) {
             block(lastUpdate?.message?.text ?: "")
         }
     }
 
+    /**
+     * Use this method to listen photo messages
+     */
     suspend fun onPhoto(block: suspend (List<Photo>) -> Unit) {
         if (lastUpdate?.message?.photo != null) {
             block(lastUpdate?.message?.photo ?: listOf())
         }
     }
 
+    /**
+     * Use this method to listen sticker messages
+     */
     suspend fun onSticker(block: suspend (Sticker) -> Unit) {
         if (lastUpdate?.message?.sticker != null) {
             block(lastUpdate?.message?.sticker!!)
         }
     }
 
+    /**
+     * Use this method to listen animation messages
+     */
     suspend fun onAnimation(block: suspend (Animation) -> Unit) {
         if (lastUpdate?.message?.animation != null) {
             block(lastUpdate?.message?.animation!!)
         }
     }
 
+    /**
+     * Use this method to listen document messages
+     */
     suspend fun onDocument(block: suspend (Document) -> Unit) {
         if (lastUpdate?.message?.document != null) {
             block(lastUpdate?.message?.document!!)
         }
     }
 
+
+    /**
+     * Use this method to listen audio messages
+     */
     suspend fun onAudio(block: suspend (Audio) -> Unit) {
         if (lastUpdate?.message?.audio != null) {
             block(lastUpdate?.message?.audio!!)
         }
     }
 
+    /**
+     * Use this method to listen voice messages
+     */
     suspend fun onVoice(block: suspend (Voice) -> Unit) {
         if (lastUpdate?.message?.voice != null) {
             block(lastUpdate?.message?.voice!!)
         }
     }
 
+    /**
+     * Use this method to listen video messages
+     */
     suspend fun onVideo(block: suspend (Video) -> Unit) {
         if (lastUpdate?.message?.video != null) {
             block(lastUpdate?.message?.video!!)
         }
     }
 
+    /**
+     * Use this method to listen video note messages(circle video messages)
+     */
     suspend fun onVideoNote(block: suspend (VideoNote) -> Unit) {
         if (lastUpdate?.message?.videoNote != null) {
             block(lastUpdate?.message?.videoNote!!)
         }
     }
 
+    /**
+     * Use this method to listen poll messages
+     */
     suspend fun onPoll(block: suspend (Poll) -> Unit) {
         if (lastUpdate?.message?.poll != null) {
             block(lastUpdate?.message?.poll!!)
         }
     }
 
+    /**
+     * Use this method to listen contact messages
+     */
     suspend fun onContact(block: suspend (Contact) -> Unit) {
         if (lastUpdate?.message?.contact != null) {
             block(lastUpdate?.message?.contact!!)
         }
     }
 
+    /**
+     * Use this method to listen location messages
+     */
     suspend fun onLocation(block: suspend (Location) -> Unit) {
         if (lastUpdate?.message?.location != null) {
             block(lastUpdate?.message?.location!!)
         }
     }
 
+    /**
+     * Use this method to listen venue messages(a type of location)
+     */
     suspend fun onVenue(block: suspend (Venue) -> Unit) {
         if (lastUpdate?.message?.venue != null) {
             block(lastUpdate?.message?.venue!!)
         }
     }
 
+    /**
+     * Use this method to listen invoice messages
+     */
     suspend fun onInvoice(block: suspend (com.github.ehsannarmani.model.update.Invoice) -> Unit) {
         if (lastUpdate?.message?.invoice != null) {
             block(lastUpdate?.message?.invoice!!)
         }
     }
 
+    /**
+     * Use this method to listen game messages
+     */
     suspend fun onGame(block: suspend (com.github.ehsannarmani.model.update.Game) -> Unit) {
         if (lastUpdate?.message?.game != null) {
             block(lastUpdate?.message?.game!!)
         }
     }
 
+    /**
+     * Use this method to listen callback queries(inline keyboard clicks)
+     */
     suspend fun onCallbackQuery(block: suspend (com.github.ehsannarmani.model.update.CallbackQuery) -> Unit) {
         if (lastUpdate?.callbackQuery != null) {
             block(lastUpdate?.callbackQuery!!)
         }
     }
+    /**
+     * Use this method to listen callback query you want
+     *
+     * Example: if you want to listen on 'close' callback queries, use it like this: onCallbackQuery("close"){ ... }
+     */
+    suspend fun onCallbackQuery(filter:String,block: suspend (com.github.ehsannarmani.model.update.CallbackQuery) -> Unit) {
+        if (lastUpdate?.callbackQuery != null) {
+            if(lastUpdate?.callbackQuery?.data == filter){
+                block(lastUpdate?.callbackQuery!!)
+            }
+        }
+    }
 
+    /**
+     * Use this method to listen inline queries
+     */
     suspend fun onInlineQuery(block: suspend (InlineQuery) -> Unit) {
         if (lastUpdate?.inlineQuery != null) {
             block(lastUpdate?.inlineQuery!!)
         }
     }
 
+    /**
+     * Use this method to listen all messages
+     */
     suspend fun onMessage(block: suspend (Message) -> Unit) {
         if (lastUpdate?.message != null) {
             block(lastUpdate?.message!!)
         }
     }
-    suspend fun onCallbackData(data:String,block: suspend (com.github.ehsannarmani.model.update.CallbackQuery) -> Unit) {
-        if (lastUpdate?.callbackQuery?.data == data) {
-            block(lastUpdate?.callbackQuery!!)
-        }
-    }
-    suspend fun <T>From.put(key:String,value:T){
 
-    }
-    suspend fun <T>From.get(key:String):T{
-        TODO()
-    }
 
+    /**
+     * Use this method on inline keyboard items to listen to clicking by users
+     */
     suspend fun InlineKeyboardItem.onCLick(onClick:suspend (com.github.ehsannarmani.model.update.CallbackQuery)->Unit):InlineKeyboardItem{
         callbackData?.let {
             coroutineScope.launch {
@@ -400,6 +504,10 @@ class Bot(
         }
         return this
     }
+
+    /**
+     * Use this method on reply keyboard items to listen to sending by users
+     */
     suspend fun ReplyKeyboardItem.onCLick(onClick:suspend (Message)->Unit): ReplyKeyboardItem {
         coroutineScope.launch {
             if (this@onCLick.text !in replyKeyboardCollects){
@@ -1026,10 +1134,10 @@ class Bot(
     }
 
     fun From.setStep(step:String){
-        putData("step",step)
+        put("step",step)
     }
     fun From.getStep():String?{
-        return getData<String>("step")
+        return get<String>("step")
     }
     fun From.deleteStep(){
         deleteData<String>("step")
@@ -1079,7 +1187,7 @@ class Bot(
         )
     }
 
-    inline fun <reified T>putData(data:UserData<T>) {
+    inline fun <reified T>put(data:UserData<T>) {
         var path = Paths.get("").toAbsolutePath().toString() + "/database"
         val dbPath = buildDBPath<T>()
         path+= "\\"+dbPath.path
@@ -1175,7 +1283,7 @@ class Bot(
             dataFile.writeText(content)
         }
     }
-    inline fun <reified T>getData(user: Long, key: String): UserData<T>? {
+    inline fun <reified T>get(user: Long, key: String): UserData<T>? {
         return getDecodedData<T>()?.lastOrNull { it.user == user && it.key == key }
     }
     inline fun <reified T>getAllData(user: Long): List<UserData<T>> {
