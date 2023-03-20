@@ -3,6 +3,9 @@ package com.github.ehsannarmani
 import com.github.ehsannarmani.bot.Bot
 import com.github.ehsannarmani.bot.model.message.keyboard.InlineKeyboard
 import com.github.ehsannarmani.bot.model.message.keyboard.inline.InlineKeyboardItem
+import com.github.ehsannarmani.bot.model.method.inline_query.AnswerInlineQuery
+import com.github.ehsannarmani.bot.model.method.inline_query.result.InlineQueryResultArticle
+import com.github.ehsannarmani.bot.model.method.inline_query.result.InlineQueryResultPhoto
 
 
 fun main() {
@@ -10,30 +13,17 @@ fun main() {
         token = "5924861492:AAFYneEcpKeTrvchBAmR8zRM7LwYjOlRGe4",
         onUpdate = { update ->
             onMessage { msg ->
-                onText("/start"){
-                    update.message?.from?.reRegister()
-                    println("registered")
+                onCommand("start"){
+                    step("name")
+                    reply("send your name")
                 }
-
-                onText("users"){
-                    println("\nusers: ${getUsers()}")
+                onStep("name"){
+                    step("age")
+                    reply("send your age")
                 }
-                onText("polling"){
-                    reply("polling working successfully", keyboard = InlineKeyboard(
-                        keyboard = listOf(
-                            listOf(
-                                InlineKeyboardItem(text = "Key 1", callbackData = "key1").onCLick {
-                                    it.answer("key1 pressed")
-                                },
-                                InlineKeyboardItem(text = "Key 2", callbackData = "key2").onCLick {
-                                    it.answer("key2 pressed")
-                                },
-                            )
-                        )
-                    )
-                    )
+                onStep("age"){
+                    // do something
                 }
-
             }
 
         },

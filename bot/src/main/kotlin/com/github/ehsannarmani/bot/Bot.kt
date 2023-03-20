@@ -162,17 +162,17 @@ class Bot(
     /**
      * Use this method for get total data saved in a type
      */
-    inline fun <reified T> From.getData():List<T>{
-        return getAllData<T>(
+    inline fun <reified T> From.get():List<UserData<T>>{
+        return getAllData(
             user = this.id,
-        ).map { it.data }
+        )
     }
 
     /**
      * Use this method for get total data saved in a type
      */
-    inline fun <reified T> get():List<T>{
-        return getAllData<T>().map { it.data }
+    inline fun <reified T> get():List<UserData<T>>{
+        return getAllData<T>()
     }
 
     /**
@@ -262,7 +262,7 @@ class Bot(
      * Use this method to get all of registered users
      */
     fun getUsers():List<From>{
-        return get()
+        return get<From>().map { it.data }
     }
 
 
@@ -344,6 +344,24 @@ class Bot(
         lastUpdate?.message?.reply(text, keyboard)
     }
 
+    fun From.step(step:String){
+        setStep(step)
+    }
+    fun step(step:String){
+        lastUpdate?.message?.from?.setStep(step)
+    }
+    suspend fun From.onStep(step:String,block: suspend (String)->Unit){
+        if (getStep() == step){
+            block(lastUpdate?.message?.text ?: "")
+        }
+    }
+    suspend fun onStep(step:String,block: suspend (String)->Unit){
+        if (lastUpdate?.message?.from?.getStep() == step){
+            block(lastUpdate?.message?.text ?: "")
+        }
+    }
+
+
     /**
      * Use this method to listen text messages
      */
@@ -361,6 +379,17 @@ class Bot(
     suspend fun onText(filter:String,block: suspend (String) -> Unit) {
         if (lastUpdate?.message?.text == filter) {
             block(lastUpdate?.message?.text ?: "")
+        }
+    }
+    suspend fun onCommand(filter:String,needle:Boolean = true,block: suspend (String) -> Unit) {
+        if (needle){
+            if (lastUpdate?.message?.text?.contains("/${filter}") == true) {
+                block(lastUpdate?.message?.text ?: "")
+            }
+        }else{
+            if (lastUpdate?.message?.text == "/${filter}") {
+                block(lastUpdate?.message?.text ?: "")
+            }
         }
     }
 
@@ -518,6 +547,20 @@ class Bot(
     suspend fun onInlineQuery(block: suspend (InlineQuery) -> Unit) {
         if (lastUpdate?.inlineQuery != null) {
             block(lastUpdate?.inlineQuery!!)
+        }
+    }
+
+
+    /**
+     * Use this method to listen inline query you want
+     *
+     * Example: if you want to listen on 'hi' inline queries, use it like this: onCallbackQuery("hi"){ ... }
+     */
+    suspend fun onInlineQuery(filter:String,block: suspend (InlineQuery) -> Unit) {
+        if (lastUpdate?.inlineQuery != null) {
+            if(lastUpdate?.inlineQuery?.query == filter){
+                block(lastUpdate?.inlineQuery!!)
+            }
         }
     }
 
