@@ -1,33 +1,13 @@
 package com.github.ehsannarmani
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.github.ehsannarmani.model.message.*
-import com.github.ehsannarmani.model.message.keyboard.InlineKeyboard
-import com.github.ehsannarmani.model.message.keyboard.ReplyKeyboard
-import com.github.ehsannarmani.model.message.keyboard.inline.InlineKeyboardItem
-import com.github.ehsannarmani.model.message.keyboard.reply.ReplyKeyboardItem
-import com.github.ehsannarmani.model.method.*
-import com.github.ehsannarmani.model.method.command.Commands
-import com.github.ehsannarmani.model.method.inline_query.AnswerInlineQuery
-import com.github.ehsannarmani.model.method.inline_query.InputMessageContent
-import com.github.ehsannarmani.model.method.inline_query.result.InlineQueryResultArticle
-import com.github.ehsannarmani.model.method.inline_query.result.InlineQueryResultContact
-import com.github.ehsannarmani.model.updating_messages.EditTextMessage
-import com.github.ehsannarmani.model.updating_messages.MessageReplyMarkup
-import com.github.ehsannarmani.utils.Constants
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import org.koin.ext.getFullName
-import java.lang.reflect.ParameterizedType
-import kotlin.reflect.full.starProjectedType
+import com.github.ehsannarmani.bot.Bot
+import com.github.ehsannarmani.bot.model.message.keyboard.InlineKeyboard
+import com.github.ehsannarmani.bot.model.message.keyboard.inline.InlineKeyboardItem
 
 
 fun main() {
     val bot = Bot(
-        token = Constants.TOKEN,
+        token = "5924861492:AAFYneEcpKeTrvchBAmR8zRM7LwYjOlRGe4",
         onUpdate = { update ->
             onMessage { msg ->
                 onText("/start"){
@@ -39,11 +19,26 @@ fun main() {
                     println("\nusers: ${getUsers()}")
                 }
                 onText("polling"){
-                    reply("polling working successfully")
+                    reply("polling working successfully", keyboard = InlineKeyboard(
+                        keyboard = listOf(
+                            listOf(
+                                InlineKeyboardItem(text = "Key 1", callbackData = "key1").onCLick {
+                                    it.answer("key1 pressed")
+                                },
+                                InlineKeyboardItem(text = "Key 2", callbackData = "key2").onCLick {
+                                    it.answer("key2 pressed")
+                                },
+                            )
+                        )
+                    )
+                    )
                 }
 
             }
 
+        },
+        onErrorThrown = {
+            println("err: ${it.message}")
         }
     )
 

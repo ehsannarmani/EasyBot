@@ -1,6 +1,3 @@
-val ktor_version: String by project
-val koin_version: String by project
-val koin_ktor: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 
@@ -30,20 +27,13 @@ tasks {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    implementation("io.ktor:ktor-client-logging:$ktor_version")
-    implementation("io.insert-koin:koin-core:$koin_version")
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.14.2")
+
+    implementation(project("bot"))
+
 
 }
