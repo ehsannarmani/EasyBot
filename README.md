@@ -67,7 +67,7 @@ Bot(
 ```kotlin
 bot.startPolling(timeout = 60)
 ```
-#### 1. Use Webhook: In this type, automaticlly webserver will create with Ktor and automaticlly bot will call setWebhook (you don't need to setWebhook)
+#### 1. Use Webhook: In this type, automatically webserver will create with Ktor and automaticlly bot will call setWebhook (you don't need to setWebhook)
 ```kotlin
 bot.launch(
     port = 3000,
@@ -87,33 +87,33 @@ ngrok http 3000
 ## Receiving Updates
 ### You can pass a function when making new instance from Bot like this: 
 ```kotlin
-    Bot(
-        ...,
-        onUpdate = { update->
-            
-        }
-    )
+Bot(
+    ...,
+    onUpdate = { update->
+        
+    }
+)
 ```
 ### to get updates!
 
 #### For example if you want to get message sender user id, you can do like this:
 ```kotlin
-    Bot(
-        ...,
-        onUpdate = { update->
-            println(update?.message?.from?.id)
-        }
-    )   
+Bot(
+    ...,
+    onUpdate = { update->
+        println(update?.message?.from?.id)
+    }
+)   
 ```
 #### Note: for using better updates, read [telegram bot document](https://core.telegram.org/bots/api)
 ### Also you can get text update with passing function to parameter **onTextUpdate** like this:
 ```kotlin
-    Bot(
-        ...,
-        onTextUpdate = { update->
-            println(update)
-        }
-    )   
+Bot(
+    ...,
+    onTextUpdate = { update->
+        println(update)
+    }
+)   
 ```
 
 
@@ -138,43 +138,43 @@ Bot(
 ## Methods:
 ### You can call all methods API bots have, For example you send message with this code:
 ```kotlin
-    val bot = Bot(...)
-    bot.sendMessage(TextMessage(
-        chatId = "@mrenk",
-        text = "Hello!",
-        parseMode = "markdown",
-        ...
-    ))
+val bot = Bot(...)
+bot.sendMessage(TextMessage(
+    chatId = "@mrenk",
+    text = "Hello!",
+    parseMode = "markdown",
+    ...
+))
 ```
 ### Or sendPhoto:
 ```kotlin
-    val bot = Bot(...)
-    bot.sendPhoto(PhotoMessage(
-        chatId = "@mrenk",
-        photo = "photo link here",
-        caption = "Hello!",
-        ...
-    ))
+val bot = Bot(...)
+bot.sendPhoto(PhotoMessage(
+    chatId = "@mrenk",
+    photo = "photo link here",
+    caption = "Hello!",
+    ...
+))
 ```
 ### And other methods!
 #### Note: for information about methods you can read [telegram bot document](https://core.telegram.org/bots/api).
 
 ### You can use this methods in onUpdate,onTextUpdate,onErrorThrown functions without writing bot instance like this:
 ```kotlin
-    Bot(
-        ...,
-        onUpdate = { update->
-            sendMessage(TextMessage(
-                chatId = update?.message?.chat?.id,
-                text = "Hello, bot working successfully"
-            ))
-            sendPhoto(PhotoMessage(
-                chatId = update?.message?.chat?.id,
-                photo = "..."
-            ))
-            ...
-        }
-    )
+Bot(
+    ...,
+    onUpdate = { update->
+        sendMessage(TextMessage(
+            chatId = update?.message?.chat?.id,
+            text = "Hello, bot working successfully"
+        ))
+        sendPhoto(PhotoMessage(
+            chatId = update?.message?.chat?.id,
+            photo = "..."
+        ))
+        ...
+    }
+)
 ```
 
 ## Keyboards
@@ -290,7 +290,7 @@ if (update.inlineQuery?.query == "hey"){
 Bot(
     ...,
     onUpdate = { update->
-        onMessage{
+        onMessage{ message->
             println("Any messages received!")
         }
     }
@@ -301,7 +301,7 @@ Bot(
 Bot(
     ...,
     onUpdate = { update->
-        onText{
+        onText{ text->
             println("a text message received!")
         }
     }
@@ -336,13 +336,13 @@ onCommand("start",false){
 Bot(
     ...,
     onUpdate = { update->
-        onPhoto{
+        onPhoto{ photo->
             println("a photo message received!")
         }
-        onVoice{
+        onVoice{ voice->
             println("a voice message received!")
         }
-        onConatct{
+        onConatct{ contact->
             println("a contact message received!")
         }
         // and all of other message types
@@ -362,7 +362,7 @@ Bot(
 ```
 #### Note: You can listen for a callback query data instead writing 'if' and checking data:
 ```kotlin
-onUpdate = {update->
+onUpdate = { update->
     onCallbackQuery("key1Data"){
         println("key1Data pressed!")
     }
