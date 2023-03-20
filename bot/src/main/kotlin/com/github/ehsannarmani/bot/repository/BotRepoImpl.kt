@@ -3,7 +3,6 @@ package com.github.ehsannarmani.bot.repository
 import com.github.ehsannarmani.bot.model.database.*
 import com.github.ehsannarmani.bot.model.update.Photo
 import com.github.ehsannarmani.bot.model.update.Update
-import com.github.ehsannarmani.bot.serializer.DynamicLookupSerializer
 import com.github.ehsannarmani.bot.utils.Constants
 import io.ktor.client.*
 import io.ktor.client.call.*

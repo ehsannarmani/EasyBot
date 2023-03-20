@@ -3,14 +3,14 @@ val logback_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.7.0"
     id("io.ktor.plugin") version "2.1.2"
-    kotlin("plugin.serialization") version "1.8.10"
+    kotlin("plugin.serialization") version "1.7.0"
 
 }
 
 group = "narmani.ehsan"
-version = "0.0.1"
+version = "1.0.0"
 application {
     mainClass.set("com.github.ehsannarmani.ApplicationKt")
 
