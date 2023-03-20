@@ -4,6 +4,22 @@
 
 <hr/>
 
+## Headlines:
+
+* ### [Add Dependency](#dependency)
+* ### [Basic Usage](#basic-usage)
+  * #### [Startups](#types-of-startups)
+  * #### [Receiving Updates](#receiving-updates)
+  * #### [Error Handling](#error-handling)
+  * #### [Methods](#methods)
+  * #### [Keyboards](#keyboards)
+  * #### [InlineQueryResults](#inlinequeryresults)
+* ### [Easy Usage](#easy-usage)
+  * #### [Listeners](#listeners)
+  * #### [Helper Methods](#helper-methods)
+  * #### [DataStore](#datastore)
+  * #### [Steps](#steps)
+
 ## Dependency
 
 ### Step 1: Add the JitPack repository to your build file
@@ -59,7 +75,7 @@ Bot(
     }
 ).startPolling()
 ```
-#### Note: you can create bot in @BotFather in get that token.
+#### Note: you can create bot in @BotFather and get that token.
 
 ## Types of startups:
 
@@ -500,7 +516,7 @@ onUpdate = {
     }
 }
 ```
-#### Note: You can save data classes! But you must user Kotlinx Serialization and mark your data class as @Serializable
+#### Note: You can save data classes! But you must use [Kotlinx Serialization](https://kotlinlang.org/docs/serialization.html) library and mark your data class as @Serializable
 ```kotlin
 @Serializable
 data class Student(@SerialName("name") val name:String,@SerialName("age") val age:Int)
