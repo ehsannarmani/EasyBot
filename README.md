@@ -57,7 +57,7 @@ dependencies {
 #### Kotlin DSL (build.gradle.kts):
 ```groovy
 dependencies {
-    implementation "com.github.ehsannarmani:EasyBot:latest_version"
+    implementation("com.github.ehsannarmani:EasyBot:latest_version")
 }
 ```
 
