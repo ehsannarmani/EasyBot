@@ -6,19 +6,19 @@
 
 ## Headlines:
 
-* ### [Add Dependency](#dependency)
-* ### [Basic Usage](#basic-usage)
-  * #### [Startups](#types-of-startups)
-  * #### [Receiving Updates](#receiving-updates)
-  * #### [Error Handling](#error-handling)
-  * #### [Methods](#methods)
-  * #### [Keyboards](#keyboards)
-  * #### [InlineQueryResults](#inlinequeryresults)
-* ### [Easy Usage](#easy-usage)
-  * #### [Listeners](#listeners)
-  * #### [Helper Methods](#helper-methods)
-  * #### [DataStore](#datastore)
-  * #### [Steps](#steps)
+* ### [\[ Add Dependency\]](#dependency)
+* ### [\[ Basic Usage \]](#basic-usage)
+  * #### [\[ Startups \]](#types-of-startups)
+  * #### [\[ Receiving Updates \]](#receiving-updates)
+  * #### [\[ Error Handling \]](#error-handling)
+  * #### [\[ Methods \]](#methods)
+  * #### [\[ Keyboards \]](#keyboards)
+  * #### [\[ InlineQueryResults \]](#inlinequeryresults)
+* ### [\[ Easy Usage \]](#easy-usage)
+  * #### [\[ Listeners \]](#listeners)
+  * #### [\[ Helper Methods \]](#helper-methods)
+  * #### [\[ DataStore \]](#datastore)
+  * #### [\[ Steps \]](#steps)
 
 ## Dependency
 
