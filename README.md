@@ -10,6 +10,8 @@
 * ### [\[ Basic Usage \]](#basic-usage)
   * #### [\[ Startups \]](#types-of-startups)
   * #### [\[ Receiving Updates \]](#receiving-updates)
+  * #### [\[ Update Types \]](#update-types)
+  * #### [\[ Message Types \]](#message-types)
   * #### [\[ Error Handling \]](#error-handling)
   * #### [\[ Methods \]](#methods)
   * #### [\[ Keyboards \]](#keyboards)
@@ -83,7 +85,7 @@ Bot(
 ```kotlin
 bot.startPolling(timeout = 60)
 ```
-#### 1. Use Webhook: In this type, automatically webserver will create with Ktor and automaticlly bot will call setWebhook (you don't need to setWebhook)
+#### 2. Use Webhook: In this type, automatically webserver will create with Ktor and automaticlly bot will call setWebhook (you don't need to setWebhook)
 ```kotlin
 bot.launch(
     port = 3000,
@@ -138,6 +140,48 @@ Bot(
 val bot = Bot(token = "...")
 bot.update.collect { update->
     println(update?.message?.text)
+}
+```
+## Update Types:
+### You can get update types:
+```kotlin
+onUpdate = { update->
+  when(update.updateType){
+    UpdateType.Message-> println("Message Update Received")
+    UpdateType.EditMessage-> println("A Message Edited")
+    UpdateType.ChannelPost-> println("A Channel Posted Something")
+    UpdateType.ChannelPostEdit -> println("A Channel Edited Some Posts")
+    UpdateType.JoinRequest -> println("Join Request Update Received")
+    UpdateType.InlineResult -> println("Inline Result Update Received")
+    UpdateType.PreCheckout -> println("PreCheckout Update Received")
+    UpdateType.Shipping -> println("Shipping Update Received")
+    UpdateType.CallbackQuery -> println("Callback Query Update Received")
+    UpdateType.InlineQuery -> println("Inline Query Update Received")
+    UpdateType.ChatMember -> println("Chat Member Update Received")
+    UpdateType.MyChatMember -> println("MyChatMember Update Received")
+    UpdateType.PollAnswer -> println("Someone put answer for a poll")
+    UpdateType.Poll -> println("Poll Update Received")
+  }
+}
+```
+## Message Types:
+### You can get message types:
+```kotlin
+onUpdate = {
+  onMessage { msg ->
+    when(msg.messageType){
+      MessageType.Text -> print("Text Message Received")
+      MessageType.Photo -> print("Photo Message Received")
+      MessageType.Audio -> print("Audio Message Received")
+      MessageType.Voice -> print("Voice Message Received")
+      MessageType.Document -> print("Document Message Received")
+      MessageType.Gif -> print("Gif Message Received")
+      MessageType.Sticker -> print("Sticker Message Received")
+      MessageType.Poll -> print("Poll Message Received")
+      MessageType.Game -> print("Game Message Received")
+      MessageType.Invoice -> print("Invoice Message Received")
+    }
+  }
 }
 ```
 ## Error Handling
@@ -347,7 +391,7 @@ onCommand("start",false){
 }
 ```
 #### this works when text only is '/start'
-#### 3.You can listen for all of other messages with their methods:
+#### 4.You can listen for all of other messages with their methods:
 ```kotlin
 Bot(
     ...,
@@ -365,7 +409,7 @@ Bot(
     }
 )
 ```
-#### 4.You can listen for callback queries with onCallbackQuery { } method:
+#### 5.You can listen for callback queries with onCallbackQuery { } method:
 ```kotlin
 Bot(
     ...,
@@ -384,7 +428,7 @@ onUpdate = { update->
     }
 }
 ```
-#### 5.You can listen for inline queries with onInlineQuery { } method:
+#### 6.You can listen for inline queries with onInlineQuery { } method:
 ```kotlin
 Bot(
     ...,
