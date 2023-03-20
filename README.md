@@ -6,7 +6,7 @@
 
 ## Headlines:
 
-* ### [\[ Add Dependency\]](#dependency)
+* ### [\[ Add Dependency \]](#dependency)
 * ### [\[ Basic Usage \]](#basic-usage)
   * #### [\[ Startups \]](#types-of-startups)
   * #### [\[ Receiving Updates \]](#receiving-updates)
