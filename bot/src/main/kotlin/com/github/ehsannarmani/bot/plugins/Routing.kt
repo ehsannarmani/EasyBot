@@ -12,6 +12,8 @@ fun Application.configureBot(
     onTextUpdate:(String)->Unit,
     onErrorThrown:(Throwable)->Unit
 ) {
+
+
     routing {
         post("/bot"){
 

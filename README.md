@@ -142,48 +142,8 @@ bot.update.collect { update->
     println(update?.message?.text)
 }
 ```
-## Update Types:
-### You can get update types:
-```kotlin
-onUpdate = { update->
-  when(update.updateType){
-    UpdateType.Message-> println("Message Update Received")
-    UpdateType.EditMessage-> println("A Message Edited")
-    UpdateType.ChannelPost-> println("A Channel Posted Something")
-    UpdateType.ChannelPostEdit -> println("A Channel Edited Some Posts")
-    UpdateType.JoinRequest -> println("Join Request Update Received")
-    UpdateType.InlineResult -> println("Inline Result Update Received")
-    UpdateType.PreCheckout -> println("PreCheckout Update Received")
-    UpdateType.Shipping -> println("Shipping Update Received")
-    UpdateType.CallbackQuery -> println("Callback Query Update Received")
-    UpdateType.InlineQuery -> println("Inline Query Update Received")
-    UpdateType.ChatMember -> println("Chat Member Update Received")
-    UpdateType.MyChatMember -> println("MyChatMember Update Received")
-    UpdateType.PollAnswer -> println("Someone put answer for a poll")
-    UpdateType.Poll -> println("Poll Update Received")
-  }
-}
-```
-## Message Types:
-### You can get message types:
-```kotlin
-onUpdate = {
-  onMessage { msg ->
-    when(msg.messageType){
-      MessageType.Text -> print("Text Message Received")
-      MessageType.Photo -> print("Photo Message Received")
-      MessageType.Audio -> print("Audio Message Received")
-      MessageType.Voice -> print("Voice Message Received")
-      MessageType.Document -> print("Document Message Received")
-      MessageType.Gif -> print("Gif Message Received")
-      MessageType.Sticker -> print("Sticker Message Received")
-      MessageType.Poll -> print("Poll Message Received")
-      MessageType.Game -> print("Game Message Received")
-      MessageType.Invoice -> print("Invoice Message Received")
-    }
-  }
-}
-```
+#### Note: to get update type, see [this](#update-types) section.
+#### Note: to get message type, see [this](#message-types) section.
 ## Error Handling
 ### You can pass function for parameter **onErrorThrown** when you making instance from Bot to get errors like: serialization error and others:
 ```kotlin
@@ -703,6 +663,51 @@ onUpdate = { update ->
             reply("your age received.")
         }
     }
+}
+```
+
+<hr/>
+
+## Update Types:
+### You can get update types:
+```kotlin
+onUpdate = { update->
+  when(update.updateType){
+    UpdateType.Message-> println("Message Update Received")
+    UpdateType.EditMessage-> println("A Message Edited")
+    UpdateType.ChannelPost-> println("A Channel Posted Something")
+    UpdateType.ChannelPostEdit -> println("A Channel Edited Some Posts")
+    UpdateType.JoinRequest -> println("Join Request Update Received")
+    UpdateType.InlineResult -> println("Inline Result Update Received")
+    UpdateType.PreCheckout -> println("PreCheckout Update Received")
+    UpdateType.Shipping -> println("Shipping Update Received")
+    UpdateType.CallbackQuery -> println("Callback Query Update Received")
+    UpdateType.InlineQuery -> println("Inline Query Update Received")
+    UpdateType.ChatMember -> println("Chat Member Update Received")
+    UpdateType.MyChatMember -> println("MyChatMember Update Received")
+    UpdateType.PollAnswer -> println("Someone put answer for a poll")
+    UpdateType.Poll -> println("Poll Update Received")
+  }
+}
+```
+## Message Types:
+### You can get message types:
+```kotlin
+onUpdate = {
+  onMessage { msg ->
+    when(msg.messageType){
+      MessageType.Text -> print("Text Message Received")
+      MessageType.Photo -> print("Photo Message Received")
+      MessageType.Audio -> print("Audio Message Received")
+      MessageType.Voice -> print("Voice Message Received")
+      MessageType.Document -> print("Document Message Received")
+      MessageType.Gif -> print("Gif Message Received")
+      MessageType.Sticker -> print("Sticker Message Received")
+      MessageType.Poll -> print("Poll Message Received")
+      MessageType.Game -> print("Game Message Received")
+      MessageType.Invoice -> print("Invoice Message Received")
+    }
+  }
 }
 ```
 
